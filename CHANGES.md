@@ -423,6 +423,20 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
+### 9.6 fix/dominio-vercel ✅
+
+**Problema**: `index.html` (canonical, Open Graph, JSON-LD) y `public/sitemap.xml`/`public/robots.txt` tenían hardcodeado `gianfranco.dev`, un dominio que el owner todavía no compró.
+
+**Tareas**:
+- [x] Reemplazado `gianfranco.dev` → `portafolio-canciani.vercel.app` en las 4 URLs de `index.html` (canonical, og:url, og:image, JSON-LD url), `robots.txt` y las 4 URLs de `sitemap.xml`
+- [x] `npm run lint` y `npm run build` — OK
+
+**Nota**: cuando compre un dominio propio, hay que volver a este mismo find-and-replace con el dominio nuevo.
+
+**Archivos afectados**: `index.html`, `public/robots.txt`, `public/sitemap.xml`
+
+---
+
 **Completado**: 22 de 23 cambios (1 bloqueado por datos externos — ver 9.3).
 
 ## ✅ Fase 10: Animaciones y Estética Premium (P1)

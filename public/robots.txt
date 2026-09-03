@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gianfranco.dev/sitemap.xml
+Sitemap: https://portafolio-canciani.vercel.app/sitemap.xml
