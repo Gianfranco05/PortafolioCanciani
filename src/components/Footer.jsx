@@ -46,6 +46,9 @@ export default function Footer() {
   // Easter egg: taza de café — contador persistente en localStorage
   const [coffeeCount, setCoffeeCount] = useState(0);
   const [coffeeMsg, setCoffeeMsg] = useState(null);
+  // Ref (no state) para bloquear clicks superpuestos: el estado tarda un render en
+  // reflejarse, y varios taps muy rápidos podían colarse antes de que se actualice.
+  const coffeeBusyRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -56,6 +59,9 @@ export default function Footer() {
   }, []);
 
   const handleCoffeeClick = () => {
+    if (coffeeBusyRef.current) return; // ya hay un mensaje activo — no se suma ni se superpone otro
+    coffeeBusyRef.current = true;
+
     setCoffeeCount((c) => {
       const next = c + 1;
       try {
@@ -66,7 +72,10 @@ export default function Footer() {
       return next;
     });
     setCoffeeMsg(COFFEE_LINES[Math.floor(Math.random() * COFFEE_LINES.length)]);
-    setTimeout(() => setCoffeeMsg(null), 2400);
+    setTimeout(() => {
+      setCoffeeMsg(null);
+      coffeeBusyRef.current = false;
+    }, 3800);
   };
 
   return (
@@ -146,7 +155,10 @@ export default function Footer() {
             <button
               type="button"
               onClick={handleCoffeeClick}
-              className="flex items-center gap-1.5 text-stone-600 hover:text-stone-300 transition-colors"
+              disabled={!!coffeeMsg}
+              className={`flex items-center gap-1.5 transition-colors ${
+                coffeeMsg ? "text-stone-300 cursor-default" : "text-stone-600 hover:text-stone-300"
+              }`}
               aria-label="Invitame un café"
             >
               <span className="relative text-base leading-none">

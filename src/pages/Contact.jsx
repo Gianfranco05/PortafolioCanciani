@@ -161,16 +161,16 @@ export default function Contact() {
                 >
                   <motion.div
                     whileHover={{ scale: 1.1 }}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border ${bgClass || "bg-stone-800"} ${borderClass || "border-stone-700"}`}
+                    className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center border ${bgClass || "bg-stone-800"} ${borderClass || "border-stone-700"}`}
                   >
                     <Icon size={idx === 0 ? 22 : 20} className={iconColor} />
                   </motion.div>
                   {href ? (
-                    <a href={href} target={href.startsWith('http') ? "_blank" : undefined} rel="noopener noreferrer" className={`${hoverColor} transition-colors font-medium`}>
+                    <a href={href} target={href.startsWith('http') ? "_blank" : undefined} rel="noopener noreferrer" className={`${hoverColor} transition-colors font-medium break-words min-w-0`}>
                       {label}
                     </a>
                   ) : (
-                    <span className="font-medium">{label}</span>
+                    <span className="font-medium break-words min-w-0">{label}</span>
                   )}
                 </motion.div>
               ))}

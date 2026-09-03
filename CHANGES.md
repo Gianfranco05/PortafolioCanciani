@@ -459,6 +459,28 @@ Cambios que hacen que el sitio sea publicable.
 
 **Archivos afectados**: `src/components/Navbar.jsx`, `src/components/Footer.jsx`
 
+---
+
+### 9.8 fix/contacto-icono-y-cafe-doble-tap ✅
+
+**Problema**: Segundo reporte probando desde el celular — el ícono de correo en Contacto se ve angosto/aplastado, y el mensaje del café dura muy poco y se puede disparar varias veces seguidas superponiéndose.
+
+**Causas encontradas**:
+1. El círculo del ícono (`w-12 h-12`) no tenía `shrink-0` — al ser un item flex sin ancho protegido, el email largo (`gianfrancocanciani@gmail.com`) lo empujaba y lo aplastaba en vez de hacer wrap.
+2. El guard para evitar doble-tap en el café (`if (coffeeMsg) return`) leía **estado de React**, que tarda un render en actualizarse — varios taps muy rápidos (antes de que React llegue a re-renderizar) pasaban igual el guard y se sumaban todos.
+
+**Tareas**:
+- [x] `shrink-0` en el círculo del ícono + `min-w-0 break-words` en el texto, para que el email haga wrap a 2 líneas en vez de aplastar el ícono
+- [x] Guard del café movido a un `useRef` (`coffeeBusyRef`) en vez de leer el estado — se actualiza al instante, así que ni 5 clicks pegados uno atrás del otro se cuelan (probado: 5 clicks seguidos = +1 solo)
+- [x] Duración del mensaje: `2400ms` → `3800ms`
+- [x] Botón queda `disabled` (con estilo distinto) mientras el mensaje está activo, y se reactiva justo cuando termina
+- [x] Verificado con clicks simulados: 5 taps rápidos solo suman 1 café, el botón se reactiva a los ~3.8s, y el mensaje queda en `opacity: 0` (invisible) al terminar
+- [x] `npm run lint` y `npm run build` — OK
+
+**Archivos afectados**: `src/pages/Contact.jsx`, `src/components/Footer.jsx`
+
+---
+
 ## ✅ Fase 10: Animaciones y Estética Premium (P1)
 
 > Completada — refinamiento del lenguaje de motion para una estética más elegante y profesional.
