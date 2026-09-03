@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="og-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a8a29e"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <radialGradient id="og-glow" cx="20%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#d6d3d1" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#d6d3d1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0c0a09"/>
+  <rect width="1200" height="630" fill="url(#og-glow)"/>
+  <circle cx="1020" cy="150" r="220" fill="url(#og-grad)" opacity="0.10"/>
+  <text x="90" y="300" font-family="Segoe UI, Arial, sans-serif" font-weight="800" font-size="76" fill="#f7f5f0">Gianfranco</text>
+  <text x="90" y="365" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="40" fill="url(#og-grad)">Desarrollador de Software</text>
+  <text x="90" y="420" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#a8a29e">Backend · React · Python · Java · SDD/OPSX</text>
+  <rect x="90" y="450" width="90" height="6" rx="3" fill="url(#og-grad)"/>
+</svg>

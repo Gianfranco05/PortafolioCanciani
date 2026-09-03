@@ -1,0 +1,23 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ecommerce Componentes Tecnológicos">
+  <defs>
+    <linearGradient id="grad-ecommerce-componentes" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c9c2b3"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <radialGradient id="glow-ecommerce-componentes" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#c9c2b3" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#c9c2b3" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots-ecommerce-componentes" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="#0c0a09"/>
+  <rect width="800" height="450" fill="url(#dots-ecommerce-componentes)"/>
+  <rect width="800" height="450" fill="url(#glow-ecommerce-componentes)"/>
+  <circle cx="400" cy="185" r="88" fill="#c9c2b3" opacity="0.10"/>
+  <circle cx="400" cy="185" r="60" fill="none" stroke="url(#grad-ecommerce-componentes)" stroke-width="1.5" opacity="0.55"/>
+  <g transform="translate(400 185)" opacity="0.95"><path d="M0-70h14l10 62h140l16-88H36" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="70" cy="20" r="12" fill="white"/><circle cx="150" cy="20" r="12" fill="white"/></g>
+  <text x="400" y="372" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="26" fill="#f7f5f0"><tspan x="400" dy="0">Ecommerce</tspan><tspan x="400" dy="34">Componentes Tecnológicos</tspan></text>
+  <rect x="376" y="420" width="48" height="4" rx="2" fill="url(#grad-ecommerce-componentes)"/>
+</svg>
