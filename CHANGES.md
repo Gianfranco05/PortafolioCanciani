@@ -407,6 +407,22 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
+### 9.5 fix/deploy-y-branding ✅
+
+**Problema**: Preparación para el primer deploy en Vercel + pedido de cambiar las iniciales de marca de "GF" a "GC".
+
+**Tareas**:
+- [x] Agregado `vercel.json` con rewrite catch-all a `index.html` — sin esto, entrar directo a `/projects`, `/experience` o `/contact` en producción tira 404 (React Router es client-side, Vercel no lo sabe resolver solo)
+- [x] Reemplazadas todas las apariciones de "GF" por "GC" (logo del Navbar, logo del Footer, moneda del easter egg de la foto, confeti del Konami Code, favicon)
+- [x] Favicon: `?v=2` → `?v=3` en `index.html` para forzar refresh de caché del navegador
+- [x] `npm run lint` y `npm run build` — OK, verificado en navegador que el Navbar dice "GC."
+
+**Archivos nuevos**: `vercel.json`
+
+**Archivos afectados**: `src/components/Navbar.jsx`, `src/components/Footer.jsx`, `src/components/KonamiEgg.jsx`, `src/pages/Home.jsx`, `public/favicon.svg`, `index.html`, `AGENTS.md`
+
+---
+
 **Completado**: 22 de 23 cambios (1 bloqueado por datos externos — ver 9.3).
 
 ## ✅ Fase 10: Animaciones y Estética Premium (P1)

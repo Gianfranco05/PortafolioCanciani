@@ -70,7 +70,7 @@ export default function Navbar() {
             className="text-2xl font-bold tracking-tight text-white hover:text-stone-300 transition-colors"
             onClick={closeMenu}
           >
-            GF<span className="text-stone-400">.</span>
+            GC<span className="text-stone-400">.</span>
           </Link>
         </motion.div>
 

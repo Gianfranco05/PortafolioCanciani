@@ -37,7 +37,7 @@ mi-portafolio/
 ├── CHANGES.md                    # Mapa de cambios priorizados (15/15 completados)
 ├── README.md
 ├── public/
-│   ├── favicon.svg               # Favicon personalizado GF
+│   ├── favicon.svg               # Favicon personalizado GC
 │   ├── CV-Gianfranco-Canciani.pdf
 │   └── images/
 │       └── foto-perfil.jpg

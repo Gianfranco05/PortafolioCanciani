@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 const KEY_SEQUENCE = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 // Equivalente táctil para mobile: mismos 8 swipes direccionales + doble tap (b, a)
 const SWIPE_SEQUENCE = ["up", "up", "down", "down", "left", "right", "left", "right"];
-const SYMBOLS = ["🪙", "✨", "GF", "⚡"];
+const SYMBOLS = ["🪙", "✨", "GC", "⚡"];
 
 export default function KonamiEgg() {
   const shouldReduceMotion = useReducedMotion();

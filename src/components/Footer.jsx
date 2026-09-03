@@ -29,7 +29,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   const shouldReduceMotion = useReducedMotion();
 
-  // Easter egg: 3 clicks rápidos en "GF." — cita de Meditaciones, Marco Aurelio
+  // Easter egg: 3 clicks rápidos en "GC." — cita de Meditaciones, Marco Aurelio
   const [quote, setQuote] = useState(null);
   const clickTimes = useRef([]);
 
@@ -80,7 +80,7 @@ export default function Footer() {
               whileHover={{ scale: 1.02 }}
               className="text-2xl font-bold text-white tracking-tight mb-2 inline-block cursor-default select-none"
             >
-              GF<span className="text-stone-400">.</span>
+              GC<span className="text-stone-400">.</span>
             </motion.p>
             <p className="text-stone-400 text-sm leading-relaxed">
               Desarrollador de software y docente IT.
@@ -195,7 +195,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Easter egg: 3 clics en "GF." — cita de Meditaciones, Marco Aurelio */}
+      {/* Easter egg: 3 clics en "GC." — cita de Meditaciones, Marco Aurelio */}
       <AnimatePresence>
         {quote && (
           <motion.div

@@ -189,7 +189,7 @@ export default function Home() {
                         className="text-5xl font-extrabold leading-none"
                         style={{ textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 -1px 0 rgba(0,0,0,0.25)" }}
                       >
-                        GF
+                        GC
                       </span>
                       <span className="text-[10px] font-medium tracking-[0.25em] mt-1">FULL STACK DEV</span>
                     </div>
