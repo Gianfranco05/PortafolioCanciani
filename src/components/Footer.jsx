@@ -185,7 +185,7 @@ export default function Footer() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="absolute right-0 top-6 text-[11px] text-stone-500 whitespace-nowrap"
+                  className="absolute bottom-full right-0 mb-2 text-[11px] text-stone-300 whitespace-nowrap bg-stone-800 border border-stone-700 px-3 py-1.5 rounded-lg shadow-lg z-10"
                 >
                   ☕ café #{coffeeCount} — {coffeeMsg}
                 </motion.p>

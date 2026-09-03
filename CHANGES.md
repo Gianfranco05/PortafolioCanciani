@@ -437,7 +437,27 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
-**Completado**: 22 de 23 cambios (1 bloqueado por datos externos — ver 9.3).
+### 9.7 fix/mobile-menu-y-cafe ✅
+
+**Problema**: Reporte del owner probando desde el celular real — el menú hamburguesa "se buguea" al abrir/cerrar, y el mensaje de la taza de café queda tapado por el texto del footer.
+
+**Causas encontradas**:
+1. El overlay + panel del menú mobile estaban envueltos en un `<>Fragment</>` como hijo de `AnimatePresence` sin `key` individual — patrón que rompe la animación de salida (un gotcha conocido de Framer Motion).
+2. `document.body.style.overflow = "hidden"` no alcanza para bloquear el scroll en iOS/Android: el fondo se sigue moviendo/rebotando detrás del menú abierto.
+3. El panel usaba `h-full` (`height: 100%`), que en mobile con barra de direcciones dinámica (Chrome/Safari) puede saltar de tamaño.
+4. El mensaje del café estaba con `position: absolute` hacia **abajo** del botón (`top-6`), y en mobile el layout se apila en columna con el copyright justo debajo — quedaban pisados.
+5. `<nav>` estaba en `z-50`, igual o por debajo del `ScrollProgress` (`z-[60]`), que podía asomarse por encima del panel del menú abierto.
+
+**Tareas**:
+- [x] Backdrop y panel ahora son hijos directos de `AnimatePresence` con `key="backdrop"`/`key="panel"` (array, sin Fragment)
+- [x] Scroll-lock robusto: fija el `body` en `position: fixed` con el `top` en el scroll actual, y lo restaura (incluyendo `window.scrollTo`) al cerrar
+- [x] `h-full` → `h-dvh` (dynamic viewport height) en el panel
+- [x] Mensaje del café: de `top-6` (abajo, se solapaba) a `bottom-full mb-2` (arriba del botón, con fondo propio) — nunca más choca con el copyright
+- [x] `<nav>`: `z-50` → `z-[70]`, por encima del `ScrollProgress`
+- [x] Verificado por DOM/JS (el pane de pruebas se background-ea y frena `requestAnimationFrame`, así que la animación se confirmó por el valor de `transform` avanzando, no por captura visual continua): el menú abre y cierra, el `body` vuelve a `static` con el scroll restaurado, y el mensaje del café no se superpone al copyright
+- [x] `npm run lint` y `npm run build` — OK
+
+**Archivos afectados**: `src/components/Navbar.jsx`, `src/components/Footer.jsx`
 
 ## ✅ Fase 10: Animaciones y Estética Premium (P1)
 

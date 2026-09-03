@@ -34,9 +34,27 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll-lock robusto para mobile: solo "overflow: hidden" no alcanza en iOS/Android,
+  // el fondo se sigue moviendo detrás del menú. Fijar el body en su posición actual lo evita.
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!isOpen) return;
+
+    const scrollY = window.scrollY;
+    const { body } = document;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -53,8 +71,8 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav 
-      className={`fixed w-full z-50 transition-all duration-500 ${
+    <nav
+      className={`fixed w-full z-[70] transition-all duration-500 ${
         scrolled
           ? "bg-stone-900/75 backdrop-blur-md shadow-lg shadow-black/20 border-b border-stone-800/60 py-4"
           : "bg-transparent border-b border-transparent py-6"
@@ -116,56 +134,56 @@ export default function Navbar() {
         </motion.button>
       </div>
 
-      {/* Menú mobile overlay */}
+      {/* Menú mobile overlay — backdrop y panel como hijos directos con key propia:
+          envolverlos en un Fragment rompe la animación de salida de AnimatePresence. */}
       <AnimatePresence>
-        {isOpen && (
-          <>
+        {isOpen && [
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/60 md:hidden z-40"
+            onClick={closeMenu}
+            aria-hidden="true"
+          />,
+          <motion.div
+            key="panel"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.25, ease: "easeInOut" }}
+            className="fixed top-0 right-0 h-dvh w-64 bg-stone-900 border-l border-stone-800 shadow-2xl md:hidden z-50 overflow-y-auto"
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/60 md:hidden z-40"
-              onClick={closeMenu}
-              aria-hidden="true"
-            />
-
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.25, ease: "easeInOut" }}
-              className="fixed top-0 right-0 h-full w-64 bg-stone-900 border-l border-stone-800 shadow-2xl md:hidden z-50"
+              variants={mobileStagger}
+              initial="hidden"
+              animate="show"
+              className="flex flex-col pt-24 px-8 gap-2"
             >
-              <motion.div
-                variants={mobileStagger}
-                initial="hidden"
-                animate="show"
-                className="flex flex-col pt-24 px-8 gap-2"
-              >
-                {navLinks.map((item) => (
-                  <motion.div
-                    key={item.path}
-                    variants={mobileItem}
-                    whileTap={{ scale: 0.95 }}
+              {navLinks.map((item) => (
+                <motion.div
+                  key={item.path}
+                  variants={mobileItem}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link
+                    to={item.path}
+                    onClick={closeMenu}
+                    className={`text-lg font-medium py-3 px-4 rounded-xl transition-colors block ${
+                      isActive(item.path)
+                        ? "text-white bg-white/10"
+                        : "text-stone-300 hover:text-white hover:bg-stone-800/50"
+                    }`}
                   >
-                    <Link
-                      to={item.path}
-                      onClick={closeMenu}
-                      className={`text-lg font-medium py-3 px-4 rounded-xl transition-colors block ${
-                        isActive(item.path)
-                          ? "text-white bg-white/10"
-                          : "text-stone-300 hover:text-white hover:bg-stone-800/50"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </motion.div>
-                ))}
-              </motion.div>
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
             </motion.div>
-          </>
-        )}
+          </motion.div>,
+        ]}
       </AnimatePresence>
     </nav>
   );
