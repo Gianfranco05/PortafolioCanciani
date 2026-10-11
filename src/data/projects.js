@@ -1,5 +1,23 @@
 const projects = [
   {
+    id: "detector-rostros",
+    name: "FaceTrack — Reconocimiento Facial",
+    description: "Evolución de un detector de rostros a una app completa de visión artificial: reconoce personas registradas en tiempo real (conocido/desconocido con umbral configurable, varios rostros por frame), gestiona personas y sus embeddings faciales, registra asistencia de entrada/salida con cooldown anti-duplicados, historial y estadísticas, landmarks y una prueba básica de liveness por parpadeo. API REST en FastAPI con PostgreSQL y dashboard en React + TypeScript. Procesamiento 100% local, sin guardar imágenes ni video por defecto.",
+    tech: ["Python", "FastAPI", "OpenCV", "MediaPipe", "PostgreSQL", "SQLAlchemy", "React", "TypeScript"],
+    image: "/images/facetrack.svg",
+    repoUrl: "https://github.com/Gianfranco05/reconocimiento_facial",
+    demoUrl: "/lab/facetrack",
+  },
+  {
+    id: "synctune",
+    name: "SyncTune — YouTube ⇄ Spotify",
+    description: "Plataforma personal que conecta YouTube con Spotify: importás una canción o una playlist entera, con coincidencias puntuadas por confianza (alta/media/baja), detección de duplicados, vista previa y confirmación explícita antes de tocar nada, e historial. Suma dashboard, centro de Conexiones, herramientas de playlists (comparar, detectar duplicados, fusionar), paleta de comandos (Ctrl+K) y modos simple/avanzado y seguro/rápido. Interfaz oscura con acento verde, tema claro y diseño responsive. OAuth2 con Spotify y Google (solo lectura), tokens cifrados con Fernet y 132 tests (pytest + Vitest).",
+    tech: ["FastAPI", "React", "TypeScript", "PostgreSQL", "SQLAlchemy", "Alembic", "OAuth 2.0", "Docker", "pytest", "Vitest"],
+    image: "/images/synctune.svg",
+    repoUrl: "https://github.com/Gianfranco05/SyncTune_v1",
+    demoUrl: "/lab/synctune",
+  },
+  {
     id: "ecommerce-componentes",
     name: "Ecommerce de Componentes Tecnológicos",
     description: "Plataforma de comercio electrónico fullstack especializada en componentes de hardware. Backend robusto en Java con Spring Boot y PostgreSQL, frontend dinámico en React. Carrito de compras, gestión de inventario, autenticación de usuarios y pagos integrados con Mercado Pago.",
@@ -40,14 +58,7 @@ const projects = [
     tech: ["Python", "Docker", "n8n", "Machine Learning", "Elasticsearch", "PostgreSQL", "Grafana"],
     image: "/images/siem-ml.svg",
     repoUrl: "https://github.com/Gianfranco05/Tesis_SiemInteligenteMachineLearning_Canciani",
-  },
-  {
-    id: "detector-rostros",
-    name: "Detector de Rostros con Python",
-    description: "Sistema de detección facial en tiempo real utilizando OpenCV y el clasificador Haar Cascade. Procesa video en vivo desde la webcam, identifica y encuadra rostros humanos con alta precisión. Ideal para aplicaciones de seguridad, control de acceso y análisis biométrico.",
-    tech: ["Python", "OpenCV", "Haar Cascade", "NumPy", "Computer Vision"],
-    image: "/images/detector-rostros.svg",
-    repoUrl: "https://github.com/Gianfranco05/reconocimiento_facial",
+    demoUrl: "/lab/siem",
   },
 ];
 

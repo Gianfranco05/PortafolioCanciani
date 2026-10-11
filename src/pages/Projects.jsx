@@ -1,4 +1,5 @@
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaGithub, FaExternalLinkAlt, FaPlay } from 'react-icons/fa';
 import { motion, useReducedMotion } from 'framer-motion';
 import projects from '../data/projects';
 import { EASE, fadeUp, staggerContainer, handleSpotlightMove } from '../lib/motion';
@@ -55,7 +56,7 @@ export default function Projects() {
                   src={proj.image} 
                   alt={`Captura de ${proj.name}`} 
                   loading="lazy"
-                  className="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                  className="w-full h-56 object-cover object-top transform group-hover:scale-105 transition-transform duration-500" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
@@ -77,14 +78,22 @@ export default function Projects() {
                 </div>
                 
                 <div className="mt-auto flex flex-wrap gap-3">
-                  {proj.demoUrl && (
+                  {proj.demoUrl && proj.demoUrl.startsWith("/") && (
+                    <Link
+                      to={proj.demoUrl}
+                      className="btn-shine flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-stone-100 hover:bg-white text-stone-950 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                    >
+                      <FaPlay className="text-xs" /> Probar demo
+                    </Link>
+                  )}
+                  {proj.demoUrl && !proj.demoUrl.startsWith("/") && (
                     <motion.a
                       href={proj.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      className="btn-shine flex-1 inline-flex items-center justify-center gap-2 bg-stone-100 hover:bg-white text-stone-950 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                      className="btn-shine flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-stone-100 hover:bg-white text-stone-950 px-4 py-2.5 rounded-lg font-medium transition-colors"
                     >
                       <FaExternalLinkAlt className="text-xs" /> Ver Demo
                     </motion.a>
@@ -99,7 +108,7 @@ export default function Projects() {
                         rel="noopener noreferrer"
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
-                        className="flex-1 inline-flex items-center justify-center gap-2 bg-stone-700 hover:bg-stone-600 text-white px-4 py-2.5 rounded-lg font-medium transition-colors"
+                        className="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap bg-stone-700 hover:bg-stone-600 text-white px-4 py-2.5 rounded-lg font-medium transition-colors"
                       >
                         <FaGithub /> {repo.label}
                       </motion.a>
@@ -111,7 +120,7 @@ export default function Projects() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      className={`inline-flex items-center justify-center gap-2 bg-stone-700 hover:bg-stone-600 text-white px-4 py-2.5 rounded-lg font-medium transition-colors ${
+                      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap bg-stone-700 hover:bg-stone-600 text-white px-4 py-2.5 rounded-lg font-medium transition-colors ${
                         proj.demoUrl ? "flex-1" : "w-full"
                       }`}
                     >
@@ -119,7 +128,7 @@ export default function Projects() {
                     </motion.a>
                   ) : (
                     <span
-                      className={`inline-flex items-center justify-center gap-2 bg-stone-900/50 border border-stone-700/50 text-stone-500 px-4 py-2.5 rounded-lg font-medium cursor-default ${
+                      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap bg-stone-900/50 border border-stone-700/50 text-stone-500 px-4 py-2.5 rounded-lg font-medium cursor-default ${
                         proj.demoUrl ? "flex-1" : "w-full"
                       }`}
                     >
