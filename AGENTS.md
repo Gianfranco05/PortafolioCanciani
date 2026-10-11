@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-Portafolio profesional de Gianfranco — desarrollador backend y docente IT radicado en Mendoza, Argentina. SPA construida con React 19 + Vite + Tailwind CSS v4. Muestra proyectos, habilidades técnicas y ofrece un formulario de contacto.
+Portafolio profesional de Gianfranco — desarrollador backend y docente IT radicado en Mendoza, Argentina. SPA construida con React 19 + Vite + Tailwind CSS v4. Muestra proyectos, experiencia, un Lab con demos interactivas y un formulario de contacto. Deploy en Vercel: https://portafolio-canciani.vercel.app
 
 ## Stack Tecnológico
 
@@ -13,10 +13,13 @@ Portafolio profesional de Gianfranco — desarrollador backend y docente IT radi
 | Tailwind CSS | ^4.1.16 | Utility-first CSS (vía Vite plugin) |
 | React Router DOM | ^7.14.0 | Routing SPA (BrowserRouter) |
 | Framer Motion | ^12.38.0 | Animaciones (entradas, scroll, stagger) |
-| React Icons | ^5.6.0 | Iconos (Fa, Fi, Hi, Md) |
+| React Icons | ^5.6.0 | Iconos (Fa, Hi, Md en el núcleo; Lu solo en el Lab) |
+| MediaPipe Tasks Vision | ^1.0.1 | Detección facial en el navegador (solo demo FaceTrack, import dinámico) |
 | ESLint | ^9.36.0 | Linter con config plana |
 
 ## Scripts Disponibles
+
+Requiere **Node 20.19+ o 22.12+** (lo exige Vite 7).
 
 ```bash
 npm run dev      # Inicia servidor de desarrollo Vite
@@ -34,31 +37,48 @@ mi-portafolio/
 ├── eslint.config.js              # ESLint flat config (react/jsx-uses-vars)
 ├── package.json
 ├── AGENTS.md                     # ← Este archivo
-├── CHANGES.md                    # Mapa de cambios priorizados (15/15 completados)
+├── CHANGES.md                    # Historial de cambios por fase
 ├── README.md
+├── vercel.json                   # Rewrite de todas las rutas a index.html (SPA)
 ├── public/
 │   ├── favicon.svg               # Favicon personalizado GC
+│   ├── og-image.png              # Imagen para compartir (1200×630, PNG: LinkedIn/WhatsApp no leen SVG)
+│   ├── robots.txt / sitemap.xml
 │   ├── CV-Gianfranco-Canciani.pdf
-│   └── images/
-│       └── foto-perfil.jpg
+│   └── images/                   # foto de perfil, portadas-logo SVG de cada proyecto (las tarjetas NO usan capturas) + capturas reales de SyncTune en images/synctune/ (galería del Lab)
 └── src/
     ├── main.jsx                  # Entry point React (StrictMode + render)
     ├── App.jsx                   # Router + Layout (Navbar + Footer + ErrorBoundary + lazy routes)
     ├── index.css                 # @import "tailwindcss" + skip-link + scrollbar estilos
     ├── data/
-    │   ├── projects.js           # 6 proyectos con datos reales
-    │   └── experience.js         # 2 roles de experiencia laboral
+    │   ├── projects.js           # 7 proyectos con datos reales
+    │   ├── experience.js         # 2 roles de experiencia laboral
+    │   ├── lab.js                # Demos del Lab (usado por Lab.jsx y Home.jsx)
+    │   └── synctuneCatalog.js    # Catálogo de ejemplo + títulos para la demo de SyncTune
+    ├── lib/
+    │   ├── motion.js             # Easing, variantes y spotlight compartidos
+    │   ├── faceLandmarker.js     # Carga diferida de MediaPipe (import dinámico + fallback GPU→CPU)
+    │   ├── blink.js              # Detección de parpadeo con histéresis
+    │   ├── synctuneMatcher.js    # Port del matching de SyncTune
+    │   ├── siemEngine.js         # Port del motor de la tesis (IF + DBSCAN + reglas)
+    │   ├── quotes.js / consoleEgg.js  # Easter eggs
     ├── components/
     │   ├── Navbar.jsx            # Navbar fijo con scroll detection + hamburger mobile
     │   ├── Footer.jsx            # Footer con año dinámico + links + redes sociales
     │   ├── ErrorBoundary.jsx     # Error Boundary (class component) con fallback UI
     │   ├── PageTransition.jsx    # Transiciones animadas entre rutas (AnimatePresence)
     │   ├── Loading.jsx           # Spinner para Suspense fallback
+    │   ├── ScrollProgress.jsx    # Barra de progreso de scroll
+    │   ├── KonamiEgg.jsx / WololoEgg.jsx  # Easter eggs
     │   └── useScrollToTop.js     # Custom hook: scroll to top al cambiar de ruta
     └── pages/
         ├── Home.jsx              # Hero + Skills Técnicas + Soft Skills + CV download
-        ├── Projects.jsx          # Grid de 6 proyectos con animaciones stagger
+        ├── Projects.jsx          # Grid de 7 proyectos con animaciones stagger
         ├── Experience.jsx        # Timeline de experiencia laboral (docencia y tutoría)
+        ├── Lab.jsx               # Índice de demos interactivas (datos en src/data/lab.js)
+        ├── lab/FaceTrackDemo.jsx # Demo MediaPipe: landmarks, parpadeo, liveness (webcam o foto)
+        ├── lab/SyncTuneDemo.jsx  # Port del matching de SyncTune (src/lib/synctuneMatcher.js)
+        ├── lab/SiemDemo.jsx      # Port del motor de la tesis (src/lib/siemEngine.js)
         ├── Contact.jsx           # Formulario con validación React + Formspree + WhatsApp
         └── NotFound.jsx          # Página 404 con diseño consistente
 ```
@@ -80,6 +100,10 @@ src/main.jsx
                       │                   ├── "/"            → lazy(Home)
                       │                   ├── "/projects"    → lazy(Projects)
                       │                   ├── "/experience"  → lazy(Experience)
+                      │                   ├── "/lab"         → lazy(Lab)
+                      │                   ├── "/lab/facetrack" → lazy(FaceTrackDemo)
+                      │                   ├── "/lab/synctune"  → lazy(SyncTuneDemo)
+                      │                   ├── "/lab/siem"      → lazy(SiemDemo)
                       │                   ├── "/contact"     → lazy(Contact)
                       │                   └── "*"            → lazy(NotFound)  (404)
                       └── <Footer />               (año dinámico, navegación, redes sociales)
@@ -87,7 +111,10 @@ src/main.jsx
 
 ### Patrones Actuales
 
-- **Routing**: `BrowserRouter` con 5 rutas. Code splitting con `React.lazy()` + `Suspense` (6 chunks: core + 5 pages). Ruta comodín `*` para 404.
+- **Routing**: `BrowserRouter` con 9 rutas. Code splitting con `React.lazy()` + `Suspense` (una chunk por página). Ruta comodín `*` para 404.
+- **Lab / performance**: `@mediapipe/tasks-vision` se importa SOLO con `import()` dinámico dentro de `src/lib/faceLandmarker.js`, al iniciar la demo. WASM y modelo vienen de CDN en runtime. Nunca importarlo estáticamente: metería ~46 kB gzip en el bundle y dispararía descargas de ~7 MB.
+- **Íconos en el Lab**: usar `react-icons/lu` (Lucide), NO `react-icons/fa`. El núcleo (Footer, ErrorBoundary) ya importa `fa`, así que cualquier ícono `Fa*` nuevo se empaqueta en el bundle principal y se carga en todas las páginas. `lu` queda en un chunk aparte que solo bajan las páginas del Lab.
+- **Ports fieles**: `synctuneMatcher.js` y `siemEngine.js` replican el código de los proyectos originales (patrones, pesos, umbrales, hiperparámetros). Si cambia el original, actualizar el port; no "mejorarlo" por separado.
 - **Estado**: `useState` + `useEffect` + custom hooks (`useScrollToTop`). Sin estado global, Context API, ni librerías externas.
 - **Data flow**: Datos de proyectos en `src/data/projects.js` y de experiencia en `src/data/experience.js`, importados por `Projects.jsx` y `Experience.jsx` respectivamente. Sin llamadas API externas.
 - **Estilos**: 100% Tailwind utility classes. CSS global solo en `index.css` (skip-link, scrollbar, body defaults).
@@ -137,9 +164,11 @@ src/main.jsx
 11. ✅ ~~Reemplazar placeholders (email, GitHub, LinkedIn, imágenes)~~
 12. ✅ ~~Agregar manejo de estado al formulario con validación + Formspree~~
 13. ✅ ~~Extraer datos de proyectos a archivo separado~~
-14. Agregar App de Gestión Personal Integral al portafolio (datos ya agregados, falta repo + imagen)
-15. Agregar imágenes reales de los 6 proyectos en `public/images/`
+14. ✅ ~~Agregar App de Gestión Personal Integral (Web con repo; Mobile espera repo)~~
+15. ✅ ~~Portadas~~: decisión del owner — las tarjetas usan logos SVG, no capturas. Capturas reales solo en el Lab (SyncTune)
 16. ✅ ~~Actualizar `README.md` — quitar placeholder `tu-usuario` en clone URL~~
+17. Repo pendiente: Gestión Personal Mobile
+18. (Opcional) Tests automáticos para `synctuneMatcher`, `siemEngine` y `blink`
 
 ## Skills Relacionados
 

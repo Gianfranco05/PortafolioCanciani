@@ -481,6 +481,140 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
+### 9.9 feat/synctune-y-facetrack ✅
+
+**Problema**: Sumar el proyecto nuevo de YouTube ⇄ Spotify y actualizar el de reconocimiento facial, que evolucionó a FaceTrack.
+
+**Tareas**:
+- [x] Nuevo proyecto **SyncTune** (primero en la grilla): FastAPI + React/TS + PostgreSQL, OAuth de Spotify y Google, tokens cifrados, matching con nivel de confianza. Datos tomados del README real en `C:\Proyectos\proyecto_YTySpoty`. Todavía sin repo remoto → badge "Repo próximamente"
+- [x] Portada nueva `public/images/synctune.svg` (ícono de sincronización + play)
+- [x] "Detector de Rostros con Python" → **FaceTrack — Reconocimiento Facial**: descripción y stack actualizados. Se chequeó el repo local antes de escribirla: solo se listan funcionalidades ya implementadas (reconocimiento, personas/embeddings, asistencia con cooldown, historial, estadísticas, landmarks, liveness básico); auth JWT y Docker siguen pendientes y no se mencionan. Mismo repo: `reconocimiento_facial`
+- [x] Texto de la portada `detector-rostros.svg` actualizado a "FaceTrack / Reconocimiento Facial"
+- [x] Conteo de proyectos 6 → 7 en `README.md` y `AGENTS.md`
+- [x] `npm run lint` y `npm run build` — OK, verificado en navegador
+
+**Pendiente**: URL del repo de SyncTune cuando se suba a GitHub.
+
+**Archivos nuevos**: `public/images/synctune.svg`
+
+**Archivos afectados**: `src/data/projects.js`, `public/images/detector-rostros.svg`, `README.md`, `AGENTS.md`
+
+---
+
+### 9.10 feat/lab-facetrack ✅
+
+**Problema**: Pedido del owner de que el portafolio sea un "hub" donde se puedan probar los proyectos. Se eligió una sección **Lab** con demos, empezando por FaceTrack (la única que puede ser 100% real sin backend). Condición explícita: **no hacer más lento el resto del portafolio**.
+
+**Tareas**:
+- [x] `/lab`: índice de demos (FaceTrack disponible, SyncTune y SIEM como "Próximamente"). Datos en `src/data/lab.js`
+- [x] `/lab/facetrack`: webcam en vivo o subida de foto → detección de hasta 4 rostros, malla de 478 landmarks, recuadro por rostro, estado de ojos, contador de parpadeos, FPS, desafío de liveness (2 parpadeos en 10 s → LIVE / UNKNOWN) y un panel de pipeline paso a paso. Aviso de privacidad y bloque "qué es real / qué queda en el proyecto completo"
+- [x] `src/lib/faceLandmarker.js`: carga diferida con `import()` dinámico + promesa cacheada; GPU con fallback automático a CPU; reintento si falla la red
+- [x] `src/lib/blink.js`: detección de parpadeo por blendshapes con histéresis (cerrar ≥ 0.7, abrir ≤ 0.4)
+- [x] Link "Lab" en Navbar y Footer; `isActive` ahora marca "Lab" también en subrutas (`/lab/facetrack`)
+- [x] Card de FaceTrack en Proyectos: botón "Probar demo" (link interno con `Link`; los `demoUrl` externos siguen abriendo en pestaña nueva)
+- [x] Sitemap: `/lab` y `/lab/facetrack`
+- [x] Dependencia nueva: `@mediapipe/tasks-vision@1.0.1`
+
+**Performance (medido con `npm run build`)**:
+| | Antes | Después |
+|---|---|---|
+| Bundle principal (gzip) | 131.15 kB | 132.13 kB (+1 kB: rutas y links nuevos) |
+| CSS (gzip) | 8.31 kB | 8.58 kB |
+| MediaPipe | — | chunk propio `vision_bundle` (46 kB gzip) + WASM ~3 MB + modelo ~3.7 MB desde CDN |
+
+`index.html` solo referencia el bundle principal y el CSS; `vision_bundle` se importa exclusivamente dentro de `loadFaceLandmarker()`, que corre al tocar "Iniciar cámara" / "Subir foto". Verificado en el navegador: la home, `/lab` y `/lab/facetrack` no hacen ninguna request de MediaPipe hasta ese click.
+
+**Bugs encontrados y corregidos durante la prueba**:
+- Con umbral de parpadeo 0.5, una foto sonriendo daba "ojos cerrados": la sonrisa sube `eyeBlink` a ~0.5–0.6 (medido: 0.51 / 0.63). Se subió el umbral y se agregó histéresis; probado con secuencias simuladas (parpadeo real, doble parpadeo, sonrisa, ruido, sin datos): 5/5 correctos.
+- El loop leía `stats.fps` de un closure viejo: movido a la ref.
+
+**Verificado**: modo foto de punta a punta en el navegador (1 rostro, 478 landmarks, 52 blendshapes, recuadro sobre la cara, ojos "abierto"; segunda carga 0.4 s por caché). **No verificado acá**: el modo webcam (el navegador de pruebas no tiene cámara) — probar en un equipo real y en celular.
+
+**Archivos nuevos**: `src/pages/Lab.jsx`, `src/pages/lab/FaceTrackDemo.jsx`, `src/lib/faceLandmarker.js`, `src/lib/blink.js`, `src/data/lab.js`
+
+**Archivos afectados**: `src/App.jsx`, `src/components/Navbar.jsx`, `src/components/Footer.jsx`, `src/pages/Projects.jsx`, `src/data/projects.js`, `public/sitemap.xml`, `package.json`, `package-lock.json`, `README.md`, `AGENTS.md`
+
+---
+
+### 9.11 feat/lab-completo ✅
+
+**Problema**: El Lab tenía 2 de 3 demos en "Próximamente", y el modo webcam de FaceTrack nunca se había probado.
+
+**Tareas**:
+- [x] **Demo SyncTune** (`/lab/synctune`): port a JS de `matching_service.py` (limpieza de título, artista/canción, versión, queries, score 40/40/10/10, niveles alta/media/baja). `difflib.SequenceMatcher.ratio()` reimplementado (Ratcliff/Obershelp). **Verificado contra el Python original: puntajes idénticos en 7 casos.** Catálogo de ejemplo con varias versiones de cada canción; los 5 ejemplos eligen la versión correcta
+- [x] **Demo SIEM** (`/lab/siem`): port de `motor_ml.py` + formato de logs de `simulador_ataques.py`: 7 features, StandardScaler, Isolation Forest (100 árboles, contamination 0.18), DBSCAN (eps 1.5, min 3), reglas de ráfaga (≥5) y movimiento lateral (≥3 hosts), fusión OR. Toggle de RU-1/2/3/6, gráfico por evento, métricas. **101 corridas del escenario de la tesis: recall 100% en todas, F1 mediano 0.83 (0.65–0.89).** ~12 ms por análisis
+- [x] FaceTrack **modo webcam probado** con una cámara simulada (stream desde la foto de perfil): 1 rostro, ~12 FPS, pipeline completo, desafío de liveness → UNKNOWN ante foto estática (correcto), "Detener" libera la cámara
+- [x] Links "Probar demo" en las cards de SyncTune y SIEM; sitemap con las 2 rutas nuevas
+
+**Bugs encontrados y corregidos**:
+- FaceTrack: el canvas de la malla se estiraba a la altura mínima del visor (280 px) y no a la del video → en celular (video de ~257 px de alto) la malla quedaba **desalineada**. Ahora video y canvas van en un wrapper del tamaño exacto del video (medido: 724×543 ambos). Fotos verticales limitadas a 70vh
+- Íconos: los `Fa*` nuevos del Lab inflaban el bundle principal (132.1 → 133.0 kB gzip) porque `react-icons/fa` ya vive ahí. Pasados a `react-icons/lu` → chunk aparte de 0.8 kB; bundle principal **131.54 kB (+0.39 kB vs. antes del Lab)**
+- SIEM: la ventana inicial (semilla 7) era casi el peor caso (F1 0.67). Se usa la semilla de F1 **mediano** (18) para que la primera impresión sea representativa, no la mejor
+- SyncTune: label de duración inline; ejemplo inicial cambiado (ver abajo)
+- `siemEngine`: shuffle sesgado (`sort(() => rng()-0.5)`) → Fisher-Yates
+
+**Limitaciones del algoritmo original de SyncTune** (detectadas al comparar; el port las replica a propósito): "(Official Video Remastered)" deja un `( )` colgado en el título limpio, y "letra" sin paréntesis no se elimina. Arreglarlas en SyncTune y luego actualizar el port.
+
+**Verificado en mobile (375 px)**: `/lab`, `/lab/facetrack`, `/lab/synctune`, `/lab/siem` sin desborde horizontal.
+
+**Archivos nuevos**: `src/pages/lab/SyncTuneDemo.jsx`, `src/pages/lab/SiemDemo.jsx`, `src/lib/synctuneMatcher.js`, `src/lib/siemEngine.js`, `src/data/synctuneCatalog.js`
+
+**Archivos afectados**: `src/App.jsx`, `src/data/lab.js`, `src/data/projects.js`, `src/pages/Lab.jsx`, `src/pages/lab/FaceTrackDemo.jsx`, `public/sitemap.xml`, `README.md`, `AGENTS.md`
+
+---
+
+### 9.12 feat/og-png-home-lab-capturas ✅
+
+**Problema**: (1) `og:image` era SVG, que LinkedIn/WhatsApp/Facebook no muestran → el link compartido salía sin imagen. (2) La home no mencionaba el Lab. (3) Portadas de proyectos generadas, sin capturas reales.
+
+**Tareas**:
+- [x] `public/og-image.png` 1200×630 (219 KB) generado con Pillow: misma paleta y tipografía (Segoe UI), + foto de perfil en círculo y nombre completo. Verificada separación nombre/foto (100 px). Borrado `og-image.svg`
+- [x] `index.html`: `og:image`/`twitter:image` → PNG, + `og:image:width/height/alt`. Título con nombre completo y descripción que menciona las demos en vivo
+- [x] Home: bloque "Probá mis proyectos en vivo" entre el hero y Especialidades, con las 3 demos (datos de `src/data/lab.js`). Solo usa `HiOutlineArrowRight`, ya presente en el núcleo → bundle principal sin cambios (131.58 kB)
+- [x] Tagline de FaceTrack acortado ("Visión artificial en vivo") para que las 3 tarjetas queden alineadas
+- [x] **Captura real** de FaceTrack (`docs/capturas/dashboard.png` del repo local) → `public/images/facetrack-dashboard.jpg` (960×600, 44 KB). Borrada la portada SVG vieja. Card con `object-top` para no cortar el encabezado
+- [x] FaceTrack movido al primer lugar de Proyectos (tiene captura real, repo y demo)
+- [x] Botones de las cards con `whitespace-nowrap`: "Probar demo"/"Repo próximamente" ya no se parten en dos líneas
+- [x] Verificado en navegador (desktop + home a 375 px sin desborde)
+
+**Pendiente**: capturas reales del resto de los proyectos — no hay imágenes en sus carpetas locales; las tiene que pasar el owner.
+
+**Archivos nuevos**: `public/og-image.png`, `public/images/facetrack-dashboard.jpg` — **eliminados**: `public/og-image.svg`, `public/images/detector-rostros.svg`
+
+**Archivos afectados**: `index.html`, `src/pages/Home.jsx`, `src/pages/Projects.jsx`, `src/data/projects.js`, `src/data/lab.js`
+
+---
+
+### 9.13 fix/seguridad-docs-limpieza ✅
+
+**Problema**: `npm audit` reportaba 7 vulnerabilidades altas en dependencias de producción; README con datos incorrectos; archivo muerto de la plantilla.
+
+**Tareas**:
+- [x] `npm audit fix` (sin cambios de versión mayor): vite 7.1.12 → 7.3.6, react-router 7.14.0 → 7.18.4, más rollup/postcss/picomatch/nanoid → **0 vulnerabilidades**. Solo cambió `package-lock.json`. Verificado: lint, build, rutas directas, navegación con `<Link>` y 404
+- [x] README reescrito: URL de clonado corregida (`mi-portafolio.git` → `PortafolioCanciani.git`, la vieja daba error), quitada la mención falsa a "Server Components y Actions", **Node ≥ 18 → 20.19+ / 22.12+** (Vite 7 no corre en Node 18), agregados MediaPipe, el Lab, deploy y link al sitio en vivo. Easter eggs mencionados sin spoilers
+- [x] AGENTS.md: stack (MediaPipe, Lucide), requisito de Node, estructura con `lib/`, `data/lab.js`, `vercel.json`, `og-image.png`; backlog actualizado
+- [x] Borrado `src/assets/react.svg` (resto de la plantilla de Vite, sin uso)
+
+**Archivos afectados**: `package-lock.json`, `README.md`, `AGENTS.md`, `CHANGES.md` — **eliminado**: `src/assets/react.svg`
+
+---
+
+### 9.14 feat/synctune-rediseno ✅
+
+**Problema**: SyncTune rediseñó su interfaz (oscura con acento verde #1db954, header fijo con pestañas, tarjetas, badges de confianza, Conexiones, responsive) y el portafolio mostraba una portada genérica y una descripción vieja.
+
+**Tareas**:
+- [x] Capturas reales de la interfaz con **datos de ejemplo**: el frontend de SyncTune corrió contra una API falsa (sin login, sin cuentas reales, sin tocar el repo de SyncTune). Carátulas generadas, artistas ficticios, "Usuario demo"
+- [x] Tarjetas de Proyectos: todas usan portada-logo SVG (sin capturas). FaceTrack vuelve a logo (`facetrack.svg`, basado en el viejo `detector-rostros.svg` con el nombre nuevo); SyncTune mantiene `synctune.svg`
+- [x] Link al repo de SyncTune: `https://github.com/Gianfranco05/SyncTune_v1`
+- [x] Descripción y stack actualizados en `src/data/projects.js` (importar canción/playlist, confianza alta/media/baja, duplicados, confirmación, historial, dashboard, Conexiones, herramientas de playlists, Ctrl+K, modos, tema claro/oscuro; OAuth2 solo lectura, Fernet, 132 tests).
+- [x] Sección "La app real" en `/lab/synctune` con 6 capturas (bienvenida, importar canción, importar playlist, dashboard, conexiones, responsive 375 px): WebP de 15–47 KB, `loading="lazy"`, solo se descargan en esa página
+- [x] Badge de confianza "baja" de la demo en rojo, igual que en la app
+
+**Archivos afectados**: `src/data/projects.js`, `src/pages/lab/SyncTuneDemo.jsx`, `AGENTS.md`, `CHANGES.md` — **nuevos**: `public/images/synctune/*.webp` (6 capturas para el Lab), `public/images/facetrack.svg`
+
+---
+
 ## ✅ Fase 10: Animaciones y Estética Premium (P1)
 
 > Completada — refinamiento del lenguaje de motion para una estética más elegante y profesional.

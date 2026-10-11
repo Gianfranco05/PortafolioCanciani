@@ -1,109 +1,95 @@
-# 👨‍💻 Gianfranco — Portafolio Profesional
+# Gianfranco Canciani — Portafolio
 
-Portafolio personal de **Gianfranco**, desarrollador backend y docente IT radicado en **Mendoza, Argentina**.
+Portafolio de **Gianfranco Canciani**, desarrollador de software y docente de programación en Mendoza, Argentina.
 
-SPA construida con **React 19 + Vite + Tailwind CSS v4**, con animaciones fluidas y diseño oscuro formal. Muestra 6 proyectos personales, habilidades técnicas y ofrece un formulario de contacto. Desarrollo guiado por la metodología SDD con flujo OPSX.
+**En vivo:** https://portafolio-canciani.vercel.app
 
-## 🚀 Tecnologías
+SPA construida con React 19, Vite y Tailwind CSS v4. Muestra proyectos, experiencia y un **Lab** con demos interactivas de algunos proyectos que corren directo en el navegador. Desarrollada con la metodología SDD y el flujo OPSX.
+
+## Tecnologías
 
 | | |
 |---|---|
-| **React** 19 | UI Library con Server Components y Actions |
-| **Vite** 7 | Bundler ultrarrápido con HMR |
-| **Tailwind CSS** 4 | Utility-first CSS vía Vite plugin |
-| **React Router** 7 | SPA routing con BrowserRouter |
-| **Framer Motion** 12 | Animaciones declarativas |
-| **React Icons** 5 | Iconos (Font Awesome, Heroicons) |
+| **React** 19 | UI |
+| **Vite** 7 | Bundler y dev server |
+| **Tailwind CSS** 4 | Estilos (vía plugin de Vite) |
+| **React Router** 7 | Routing SPA con `BrowserRouter` |
+| **Framer Motion** 12 | Animaciones y transiciones entre páginas |
+| **React Icons** 5 | Íconos (Font Awesome, Heroicons, Lucide) |
+| **MediaPipe Tasks Vision** | Detección facial en el navegador (demo de FaceTrack) |
 
-## 📦 Requisitos
+## Requisitos
 
-- **Node.js** ≥ 18 (recomendado 20 LTS)
-- **npm** ≥ 9
+- **Node.js** 20.19+ o 22.12+ (lo exige Vite 7)
+- **npm** 10+
 
-## 🔧 Instalación
+## Instalación
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/Gianfranco05/mi-portafolio.git
-cd mi-portafolio
-
-# Instalar dependencias
+git clone https://github.com/Gianfranco05/PortafolioCanciani.git
+cd PortafolioCanciani
 npm install
 ```
 
-## 🏃 Scripts Disponibles
+## Scripts
 
 ```bash
-# Desarrollo — inicia servidor con HMR en http://localhost:5173
-npm run dev
-
-# Build de producción — genera bundle en /dist
-npm run build
-
-# Previsualizar build localmente
-npm run preview
-
-# Linter — ESLint sobre todo el proyecto
-npm run lint
+npm run dev      # servidor de desarrollo en http://localhost:5173
+npm run build    # build de producción en /dist
+npm run preview  # previsualiza el build
+npm run lint     # ESLint
 ```
 
-## 📁 Estructura del Proyecto
-
-```
-mi-portafolio/
-├── index.html              # Entry point HTML + SEO meta tags + JSON-LD
-├── vite.config.js          # Configuración de Vite + React + Tailwind
-├── eslint.config.js        # ESLint flat config
-├── public/                 # Assets estáticos (favicon, CV, imágenes)
-└── src/
-    ├── main.jsx            # Entry point React (StrictMode)
-    ├── App.jsx             # Router + Layout (Navbar, Footer, ErrorBoundary, lazy routes)
-    ├── index.css           # Estilos globales + Tailwind + scrollbar
-    ├── data/
-    │   ├── projects.js     # Datos de 6 proyectos
-    │   └── experience.js   # Datos de experiencia laboral (2 roles)
-    ├── components/         # Componentes reutilizables
-    │   ├── Navbar.jsx      # Navbar fijo + hamburger mobile
-    │   ├── Footer.jsx      # Footer con año dinámico + navegación + redes
-    │   ├── ErrorBoundary.jsx    # Captura errores de renderizado
-    │   ├── PageTransition.jsx   # Transiciones animadas entre rutas
-    │   ├── Loading.jsx          # Spinner para Suspense fallback
-    │   └── useScrollToTop.js    # Custom hook: scroll al cambiar de ruta
-    └── pages/              # Páginas (lazy-loaded)
-        ├── Home.jsx        # Hero + Skills Técnicas + Soft Skills
-        ├── Projects.jsx    # Grid de proyectos con animaciones
-        ├── Experience.jsx  # Timeline de experiencia laboral
-        ├── Contact.jsx     # Formulario validado + Formspree + WhatsApp
-        └── NotFound.jsx    # Página 404
-```
-
-## 🧭 Rutas
+## Rutas
 
 | Ruta | Página | Descripción |
 |---|---|---|
-| `/` | Home | Hero, presentación, habilidades técnicas, CV |
-| `/projects` | Projects | Grid de 6 proyectos con stacks y links |
-| `/experience` | Experience | Timeline de experiencia laboral (docencia y tutoría) |
-| `/contact` | Contact | Formulario validado + redes + WhatsApp |
-| `*` | NotFound | Página 404 con diseño consistente |
+| `/` | Home | Presentación, acceso al Lab, especialidades y skills, descarga del CV |
+| `/projects` | Projects | 7 proyectos con stack, repos y demos |
+| `/experience` | Experience | Experiencia laboral (docencia y tutoría) |
+| `/lab` | Lab | Índice de demos interactivas |
+| `/lab/facetrack` | FaceTrackDemo | Detección facial, landmarks, parpadeo y liveness con la webcam o una foto |
+| `/lab/synctune` | SyncTuneDemo | Algoritmo de matching YouTube → Spotify de SyncTune, sobre un catálogo de ejemplo |
+| `/lab/siem` | SiemDemo | Motor de detección de anomalías de la tesis (Isolation Forest + DBSCAN + reglas) sobre logs sintéticos |
+| `/contact` | Contact | Formulario (Formspree) y contacto por WhatsApp |
+| `*` | NotFound | Página 404 |
 
-## ✨ Features
+## El Lab
 
-- **Diseño oscuro** con paleta negro/plateado/crema (stone) + gradientes
-- **Animaciones** con Framer Motion (entradas, scroll, stagger, page transitions)
-- **Respeto por `prefers-reduced-motion`** — animaciones se desactivan si el SO lo pide
-- **Code splitting** con `React.lazy()` + `Suspense` (6 chunks)
-- **Error Boundary** con fallback UI y botón de recarga
-- **Navbar adaptable** que cambia de transparente a sólido + menú hamburger mobile con overlay
-- **Footer** con año dinámico, navegación interna y redes sociales
-- **Scroll to top** automático al cambiar de ruta
-- **Skip-link** de accesibilidad ("Saltar al contenido principal")
-- **Scrollbar estilizado** para WebKit y Firefox
-- **Formulario de contacto** con validación React, estados de envío y fallback WhatsApp
-- **SEO completo**: meta tags (description, keywords, OG, Twitter Cards) + JSON-LD Structured Data
-- **6 proyectos** con stacks reales, links a GitHub + demo
+Cada demo aclara qué parte es real y qué parte es una versión simplificada del proyecto completo:
 
-## 📄 Licencia
+- **FaceTrack**: usa el mismo motor de visión (MediaPipe) que el proyecto. Todo corre en el navegador y la imagen de la cámara no se envía a ningún lado.
+- **SyncTune**: `src/lib/synctuneMatcher.js` es un port fiel del algoritmo de matching del backend en Python (mismos patrones, pesos y umbrales). Los candidatos salen de un catálogo de ejemplo, no de la API de Spotify.
+- **SIEM**: `src/lib/siemEngine.js` replica el pipeline del motor de la tesis (features, escalado, hiperparámetros, reglas y fusión OR) sobre logs con el formato del simulador de ataques.
 
-Uso personal — Gianfranco.
+**Performance:** MediaPipe (librería, WebAssembly y modelo, ~7 MB en total) se descarga solo cuando alguien toca "Iniciar" en la demo de FaceTrack, nunca al cargar el sitio. Cada página es un chunk separado.
 
+## Estructura
+
+```
+├── index.html            # HTML base, SEO, Open Graph y JSON-LD
+├── vercel.json           # rewrite a index.html para las rutas de la SPA
+├── public/               # favicon, CV, og-image.png, robots.txt, sitemap.xml, imágenes
+└── src/
+    ├── main.jsx
+    ├── App.jsx           # router, layout y rutas lazy
+    ├── index.css         # estilos globales
+    ├── components/       # Navbar, Footer, ErrorBoundary, transiciones, easter eggs
+    ├── data/             # proyectos, experiencia, demos del Lab, catálogo de SyncTune
+    ├── lib/              # animaciones, lógica de las demos (MediaPipe, parpadeo, SyncTune, SIEM)
+    └── pages/            # una página por ruta (lazy); lab/ con las demos
+```
+
+## Deploy
+
+Se despliega en Vercel desde la rama `main`. `vercel.json` redirige todas las rutas a `index.html` para que funcionen los links directos (por ejemplo `/lab/siem`).
+
+## Detalles
+
+- Respeta `prefers-reduced-motion`.
+- Skip-link y navegación por teclado.
+- Hay algunos easter eggs escondidos. 😉
+
+## Licencia
+
+Uso personal — Gianfranco Canciani.
