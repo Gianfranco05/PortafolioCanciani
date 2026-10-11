@@ -7,6 +7,7 @@ const navLinks = [
   { path: "/", label: "Inicio" },
   { path: "/projects", label: "Proyectos" },
   { path: "/experience", label: "Experiencia" },
+  { path: "/lab", label: "Lab" },
   { path: "/contact", label: "Contacto" },
 ];
 
@@ -68,7 +69,8 @@ export default function Navbar() {
   }, [isOpen]);
 
   const closeMenu = () => setIsOpen(false);
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) =>
+    path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
   return (
     <nav

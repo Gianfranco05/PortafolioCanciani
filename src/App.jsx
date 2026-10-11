@@ -15,6 +15,10 @@ import { printConsoleEgg } from "./lib/consoleEgg";
 const Home = lazy(() => import("./pages/Home"));
 const Projects = lazy(() => import("./pages/Projects"));
 const Experience = lazy(() => import("./pages/Experience"));
+const Lab = lazy(() => import("./pages/Lab"));
+const FaceTrackDemo = lazy(() => import("./pages/lab/FaceTrackDemo"));
+const SyncTuneDemo = lazy(() => import("./pages/lab/SyncTuneDemo"));
+const SiemDemo = lazy(() => import("./pages/lab/SiemDemo"));
 const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -43,6 +47,10 @@ function AppContent() {
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/experience" element={<Experience />} />
+                <Route path="/lab" element={<Lab />} />
+                <Route path="/lab/facetrack" element={<FaceTrackDemo />} />
+                <Route path="/lab/synctune" element={<SyncTuneDemo />} />
+                <Route path="/lab/siem" element={<SiemDemo />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

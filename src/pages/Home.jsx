@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin, FaInstagram, FaServer, FaCode, FaDatabase, FaUser
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import { motion, useReducedMotion } from 'framer-motion';
 import { EASE, fadeUp, handleSpotlightMove } from '../lib/motion';
+import labDemos from '../data/lab';
 
 const specialtyCards = [
   { icon: FaCode, title: "Desarrollo Fullstack", text: "Construcción de aplicaciones web con React y TypeScript en el frontend, y APIs robustas con Java, Spring Boot, FastAPI y Node.js en el backend. Guiado por la metodología SDD con flujo OPSX: especificar, diseñar, implementar y archivar." },
@@ -209,8 +210,52 @@ export default function Home() {
           </motion.div>
         </div>
 
+        {/* Lab: demos en vivo */}
+        <motion.div
+          {...sectionFade}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="mt-32 max-w-5xl mx-auto"
+        >
+          <div className="text-center mb-10">
+            <span className="inline-block py-1 px-3 rounded-full bg-white/5 text-stone-300 text-xs font-semibold tracking-wider uppercase mb-4 border border-white/15">
+              Lab
+            </span>
+            <h2 className="text-3xl font-bold text-white mb-4">Probá mis proyectos en vivo</h2>
+            <p className="text-stone-400 max-w-2xl mx-auto">
+              No solo capturas: tres de mis proyectos tienen una demo que corre directo en tu navegador.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {labDemos
+              .filter((d) => d.status === "available")
+              .map((demo) => (
+                <Link
+                  key={demo.id}
+                  to={demo.path}
+                  onMouseMove={handleSpotlightMove}
+                  className="spotlight group flex flex-col bg-stone-800/50 hover:bg-stone-800 p-6 rounded-2xl border border-stone-700/50 hover:border-stone-500 transition-colors"
+                >
+                  <p className="text-[11px] font-semibold tracking-wider uppercase text-stone-500 mb-2">{demo.tagline}</p>
+                  <h3 className="text-xl font-bold text-white mb-4">{demo.name}</h3>
+                  <span className="mt-auto inline-flex items-center gap-2 text-sm font-medium text-stone-300 group-hover:text-white transition-colors">
+                    Probar demo
+                    <HiOutlineArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+              ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link to="/lab" className="text-sm text-stone-400 hover:text-white underline underline-offset-4 transition-colors">
+              Ver cómo funciona cada demo
+            </Link>
+          </div>
+        </motion.div>
+
         {/* Sección Especialidades Técnicas */}
-        <motion.div 
+        <motion.div
           {...sectionFade}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: EASE }}
