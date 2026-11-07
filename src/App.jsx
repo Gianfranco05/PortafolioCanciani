@@ -11,6 +11,8 @@ import KonamiEgg from "./components/KonamiEgg";
 import WololoEgg from "./components/WololoEgg";
 import useScrollToTop from "./components/useScrollToTop";
 import { printConsoleEgg } from "./lib/consoleEgg";
+import LanguageProvider from "./i18n/LanguageProvider";
+import useLang from "./i18n/useLang";
 
 const Home = lazy(() => import("./pages/Home"));
 const Projects = lazy(() => import("./pages/Projects"));
@@ -24,16 +26,17 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 function AppContent() {
   const location = useLocation();
+  const { lang } = useLang();
   useScrollToTop();
 
   useEffect(() => {
-    printConsoleEgg();
-  }, []);
+    printConsoleEgg(lang);
+  }, [lang]);
 
   return (
     <>
       <a href="#main-content" className="skip-link">
-        Saltar al contenido principal
+        {lang === "es" ? "Saltar al contenido principal" : "Skip to main content"}
       </a>
       <ScrollProgress />
       <KonamiEgg />
@@ -65,8 +68,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </LanguageProvider>
   );
 }

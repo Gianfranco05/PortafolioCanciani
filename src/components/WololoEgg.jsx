@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import useLang from "../i18n/useLang";
 
 const TARGET = "wololo";
 export const WOLOLO_EVENT = "wololo:trigger";
+
+const SUBTITLE = {
+  es: "Age of Empires II — unidad convertida",
+  en: "Age of Empires II — unit converted",
+};
 
 // Easter egg — Age of Empires II. Escribí "wololo" en cualquier parte de la página
 // (desktop, por teclado) o en el campo de mensaje de Contacto (mobile, dispara WOLOLO_EVENT).
 export default function WololoEgg() {
   const [active, setActive] = useState(false);
+  const { lang } = useLang();
 
   const trigger = () => {
     setActive(true);
@@ -56,7 +63,7 @@ export default function WololoEgg() {
             <span className="text-2xl">🙏</span>
             <div>
               <p className="font-extrabold tracking-wide">¡WOLOLO!</p>
-              <p className="text-xs text-stone-400">Age of Empires II — unidad convertida</p>
+              <p className="text-xs text-stone-400">{SUBTITLE[lang]}</p>
             </div>
           </div>
         </motion.div>

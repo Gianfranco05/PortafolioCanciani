@@ -4,6 +4,65 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EASE, handleSpotlightMove } from '../lib/motion';
 import { WOLOLO_EVENT } from '../components/WololoEgg';
+import useLang from '../i18n/useLang';
+import useDocumentMeta from '../i18n/useDocumentMeta';
+
+const TEXT = {
+  es: {
+    metaTitle: "Contacto",
+    metaDescription: "Escribile a Gianfranco Canciani por el formulario, por mail o por WhatsApp. Proyectos, propuestas docentes o simplemente conectar.",
+    title: "Ponte en Contacto",
+    talk: "Hablemos",
+    intro: "¿Tienes un proyecto en mente, una propuesta docente o simplemente quieres conectar? Estaré encantado de leerte.",
+    socials: "Redes Sociales",
+    location: "Mendoza, Argentina",
+    sentTitle: "¡Mensaje enviado!",
+    sentText: "Gracias por escribirme, te respondo a la brevedad.",
+    name: "Nombre Completo",
+    namePlaceholder: "Ej. Jack Ross",
+    email: "Correo Electrónico",
+    message: "Mensaje",
+    messagePlaceholder: "Cuéntame sobre tu proyecto...",
+    errName: "El nombre es obligatorio",
+    errEmailRequired: "El email es obligatorio",
+    errEmailInvalid: "Email no válido",
+    errMessage: "El mensaje no puede estar vacío",
+    errSendBefore: "Hubo un error al enviar el mensaje. Podés escribirme directo por ",
+    errSendAfter: ".",
+    sending: "Enviando...",
+    send: "Enviar Mensaje",
+    or: "o",
+    whatsapp: "Escríbeme por WhatsApp",
+    jack: "🚢 Jack... había lugar para los dos en la puerta.",
+  },
+  en: {
+    metaTitle: "Contact",
+    metaDescription: "Get in touch with Gianfranco Canciani through the form, email or WhatsApp. Projects, teaching proposals or just to connect.",
+    title: "Get in Touch",
+    talk: "Let's talk",
+    intro: "Have a project in mind, a teaching proposal, or just want to connect? I'd love to hear from you.",
+    socials: "Social Media",
+    location: "Mendoza, Argentina",
+    sentTitle: "Message sent!",
+    sentText: "Thanks for reaching out, I'll get back to you shortly.",
+    name: "Full Name",
+    namePlaceholder: "e.g. Jack Ross",
+    email: "Email",
+    message: "Message",
+    messagePlaceholder: "Tell me about your project...",
+    errName: "Name is required",
+    errEmailRequired: "Email is required",
+    errEmailInvalid: "Invalid email",
+    errMessage: "The message can't be empty",
+    errSendBefore: "There was an error sending your message. You can write to me directly on ",
+    errSendAfter: ".",
+    sending: "Sending...",
+    send: "Send Message",
+    or: "or",
+    whatsapp: "Message me on WhatsApp",
+    jack: "🚢 Jack... there was room for both of us on that door.",
+  },
+};
 
 const FORM_URL = 'https://formspree.io/f/xeedoklk';
 
@@ -11,7 +70,7 @@ const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const infoItems = [
   { icon: MdOutlineEmail, iconColor: "text-stone-300", label: "gianfrancocanciani@gmail.com", href: "mailto:gianfrancocanciani@gmail.com", hoverColor: "hover:text-white" },
-  { icon: FaMapMarkerAlt, iconColor: "text-stone-300", label: "Mendoza, Argentina", href: null, hoverColor: "" },
+  { icon: FaMapMarkerAlt, iconColor: "text-stone-300", label: "location", href: null, hoverColor: "" },
   { icon: FaWhatsapp, iconColor: "text-green-400", label: "+54 9 261 681 1044", href: "https://wa.me/5492616811044", hoverColor: "hover:text-green-400", bgClass: "bg-green-900/50", borderClass: "border-green-700/50" },
 ];
 
@@ -23,6 +82,9 @@ const socialLinks = [
 
 export default function Contact() {
   const shouldReduceMotion = useReducedMotion();
+  const { lang } = useLang();
+  const t = TEXT[lang];
+  useDocumentMeta({ title: t.metaTitle, description: t.metaDescription });
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState('idle');
   const [errores, setErrores] = useState({});
@@ -61,10 +123,10 @@ export default function Contact() {
     e.preventDefault();
 
     const nuevosErrores = {};
-    if (!formData.name.trim()) nuevosErrores.name = 'El nombre es obligatorio';
-    if (!formData.email.trim()) nuevosErrores.email = 'El email es obligatorio';
-    else if (!validarEmail(formData.email)) nuevosErrores.email = 'Email no válido';
-    if (!formData.message.trim()) nuevosErrores.message = 'El mensaje no puede estar vacío';
+    if (!formData.name.trim()) nuevosErrores.name = t.errName;
+    if (!formData.email.trim()) nuevosErrores.email = t.errEmailRequired;
+    else if (!validarEmail(formData.email)) nuevosErrores.email = t.errEmailInvalid;
+    if (!formData.message.trim()) nuevosErrores.message = t.errMessage;
 
     if (Object.keys(nuevosErrores).length > 0) {
       setErrores(nuevosErrores);
@@ -122,7 +184,7 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Ponte en Contacto
+            {t.title}
           </h2>
           <motion.div
             initial={{ width: 0 }}
@@ -145,9 +207,9 @@ export default function Contact() {
             className="lg:col-span-2 space-y-8"
           >
             <motion.div variants={infoItemAnim}>
-              <h3 className="text-3xl font-bold text-white mb-4">Hablemos</h3>
+              <h3 className="text-3xl font-bold text-white mb-4">{t.talk}</h3>
               <p className="text-stone-400 text-lg leading-relaxed">
-                ¿Tienes un proyecto en mente, una propuesta docente o simplemente quieres conectar? Estaré encantado de leerte.
+                {t.intro}
               </p>
             </motion.div>
             
@@ -170,14 +232,14 @@ export default function Contact() {
                       {label}
                     </a>
                   ) : (
-                    <span className="font-medium break-words min-w-0">{label}</span>
+                    <span className="font-medium break-words min-w-0">{label === "location" ? t.location : label}</span>
                   )}
                 </motion.div>
               ))}
             </div>
 
             <motion.div variants={infoItemAnim} className="pt-8 border-t border-stone-700/50">
-              <p className="text-sm text-stone-400 mb-4 font-semibold uppercase tracking-wider">Redes Sociales</p>
+              <p className="text-sm text-stone-400 mb-4 font-semibold uppercase tracking-wider">{t.socials}</p>
               <div className="flex gap-4">
                 {socialLinks.map(({ href, icon: Icon, hoverClass, label }) => (
                   <motion.a
@@ -216,14 +278,14 @@ export default function Contact() {
                 >
                   <FaCheckCircle className="text-green-400 text-6xl mb-6" />
                 </motion.div>
-                <h3 className="text-2xl font-bold text-white mb-2">¡Mensaje enviado!</h3>
-                <p className="text-stone-400 text-lg">Gracias por escribirme, te respondo a la brevedad.</p>
+                <h3 className="text-2xl font-bold text-white mb-2">{t.sentTitle}</h3>
+                <p className="text-stone-400 text-lg">{t.sentText}</p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-semibold text-stone-300">Nombre Completo</label>
+                    <label htmlFor="name" className="text-sm font-semibold text-stone-300">{t.name}</label>
                     <motion.input
                       whileFocus={{ scale: 1.01 }}
                       type="text" id="name" name="name"
@@ -233,7 +295,7 @@ export default function Contact() {
                           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                           : 'border-stone-700 focus:border-stone-400 focus:ring-stone-400'
                       }`}
-                      placeholder="Ej. Jack Ross"
+                      placeholder={t.namePlaceholder}
                     />
                     {errores.name && <p className="text-red-400 text-sm mt-1">{errores.name}</p>}
                     <AnimatePresence>
@@ -244,13 +306,13 @@ export default function Contact() {
                           exit={{ opacity: 0 }}
                           className="text-stone-400 text-xs italic mt-1"
                         >
-                          🚢 Jack... había lugar para los dos en la puerta.
+                          {t.jack}
                         </motion.p>
                       )}
                     </AnimatePresence>
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-semibold text-stone-300">Correo Electrónico</label>
+                    <label htmlFor="email" className="text-sm font-semibold text-stone-300">{t.email}</label>
                     <motion.input
                       whileFocus={{ scale: 1.01 }}
                       type="email" id="email" name="email"
@@ -267,7 +329,7 @@ export default function Contact() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-semibold text-stone-300">Mensaje</label>
+                  <label htmlFor="message" className="text-sm font-semibold text-stone-300">{t.message}</label>
                   <motion.textarea
                     whileFocus={{ scale: 1.01 }}
                     id="message" name="message" rows="6"
@@ -277,7 +339,7 @@ export default function Contact() {
                         ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                         : 'border-stone-700 focus:border-stone-400 focus:ring-stone-400'
                     }`}
-                    placeholder="Cuéntame sobre tu proyecto..."
+                    placeholder={t.messagePlaceholder}
                   ></motion.textarea>
                   {errores.message && <p className="text-red-400 text-sm mt-1">{errores.message}</p>}
                 </div>
@@ -289,7 +351,7 @@ export default function Contact() {
                     className="flex items-center gap-3 bg-red-900/30 border border-red-700/50 text-red-300 px-4 py-3 rounded-xl"
                   >
                     <FaExclamationCircle className="shrink-0" />
-                    <p className="text-sm">Hubo un error al enviar el mensaje. Podés escribirme directo por <a href="https://wa.me/5492616811044" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">WhatsApp</a>.</p>
+                    <p className="text-sm">{t.errSendBefore}<a href="https://wa.me/5492616811044" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">WhatsApp</a>{t.errSendAfter}</p>
                   </motion.div>
                 )}
 
@@ -307,9 +369,9 @@ export default function Contact() {
                         transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                         className="inline-block w-4 h-4 border-2 border-stone-950/30 border-t-stone-950 rounded-full"
                       />
-                      Enviando...
+                      {t.sending}
                     </span>
-                  ) : 'Enviar Mensaje'}
+                  ) : t.send}
                 </motion.button>
               </form>
             )}
@@ -321,7 +383,7 @@ export default function Contact() {
                     <div className="w-full border-t border-stone-700/50"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-stone-800 text-stone-400 font-medium">o</span>
+                    <span className="px-4 bg-stone-800 text-stone-400 font-medium">{t.or}</span>
                   </div>
                 </div>
                 <motion.a
@@ -333,7 +395,7 @@ export default function Contact() {
                   className="btn-shine w-full inline-flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 text-white px-6 py-4 rounded-xl font-bold transition-all shadow-lg shadow-green-900/30"
                 >
                   <FaWhatsapp size={22} />
-                  Escríbeme por WhatsApp
+                  {t.whatsapp}
                 </motion.a>
               </div>
             )}

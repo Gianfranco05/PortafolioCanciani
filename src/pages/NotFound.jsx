@@ -2,9 +2,31 @@ import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { motion, useReducedMotion } from "framer-motion";
 import { EASE } from "../lib/motion";
+import useLang from "../i18n/useLang";
+import useDocumentMeta from "../i18n/useDocumentMeta";
+
+const TEXT = {
+  es: {
+    metaTitle: "Página no encontrada",
+    metaDescription: "La página que buscás no existe o fue movida.",
+    title: "Página no encontrada",
+    text: "La página que buscas no existe o fue movida. Revisá la URL o volvé al inicio.",
+    back: "Volver al Inicio",
+  },
+  en: {
+    metaTitle: "Page not found",
+    metaDescription: "The page you are looking for does not exist or has been moved.",
+    title: "Page not found",
+    text: "The page you are looking for does not exist or has been moved. Check the URL or go back home.",
+    back: "Back to Home",
+  },
+};
 
 export default function NotFound() {
   const shouldReduceMotion = useReducedMotion();
+  const { lang } = useLang();
+  const t = TEXT[lang];
+  useDocumentMeta({ title: t.metaTitle, description: t.metaDescription });
 
   const anim = shouldReduceMotion
     ? {}
@@ -29,12 +51,11 @@ export default function NotFound() {
           </motion.span>
 
           <h1 className="text-3xl md:text-4xl font-bold text-white mt-6 mb-4">
-            Página no encontrada
+            {t.title}
           </h1>
 
           <p className="text-stone-400 text-lg max-w-md mx-auto mb-10 leading-relaxed">
-            La página que buscas no existe o fue movida.
-            Revisá la URL o volvé al inicio.
+            {t.text}
           </p>
 
           <motion.div
@@ -47,7 +68,7 @@ export default function NotFound() {
               className="btn-shine inline-flex items-center gap-3 bg-stone-100 hover:bg-white text-stone-950 px-8 py-4 rounded-xl font-medium transition-all shadow-lg shadow-black/30"
             >
               <FaHome />
-              Volver al Inicio
+              {t.back}
             </Link>
           </motion.div>
         </motion.div>

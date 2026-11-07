@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import useLang from "../i18n/useLang";
 
 const KEY_SEQUENCE = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 // Equivalente táctil para mobile: mismos 8 swipes direccionales + doble tap (b, a)
 const SWIPE_SEQUENCE = ["up", "up", "down", "down", "left", "right", "left", "right"];
 const SYMBOLS = ["🪙", "✨", "GC", "⚡"];
 
+const TEXT = {
+  es: { title: "🎮 Konami Code activado", sub: "Sabía que alguien lo iba a probar." },
+  en: { title: "🎮 Konami Code activated", sub: "I knew someone would try it." },
+};
+
 export default function KonamiEgg() {
   const shouldReduceMotion = useReducedMotion();
+  const { lang } = useLang();
+  const t = TEXT[lang];
   const [active, setActive] = useState(false);
 
   const trigger = () => {
@@ -132,8 +140,8 @@ export default function KonamiEgg() {
             transition={{ delay: 0.15 }}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center px-8 py-5 rounded-2xl border border-stone-700 bg-stone-950/80"
           >
-            <p className="text-xl md:text-3xl font-extrabold text-white">🎮 Konami Code activado</p>
-            <p className="text-sm text-stone-400 mt-1">Sabía que alguien lo iba a probar.</p>
+            <p className="text-xl md:text-3xl font-extrabold text-white">{t.title}</p>
+            <p className="text-sm text-stone-400 mt-1">{t.sub}</p>
           </motion.div>
         </motion.div>
       )}

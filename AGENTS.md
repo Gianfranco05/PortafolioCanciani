@@ -55,6 +55,7 @@ mi-portafolio/
     │   ├── experience.js         # 2 roles de experiencia laboral
     │   ├── lab.js                # Demos del Lab (usado por Lab.jsx y Home.jsx)
     │   └── synctuneCatalog.js    # Catálogo de ejemplo + títulos para la demo de SyncTune
+    ├── i18n/                     # Idioma ES/EN: LanguageProvider, useLang, tr(), useDocumentMeta
     ├── lib/
     │   ├── motion.js             # Easing, variantes y spotlight compartidos
     │   ├── faceLandmarker.js     # Carga diferida de MediaPipe (import dinámico + fallback GPU→CPU)
@@ -140,7 +141,7 @@ src/main.jsx
 2. **NO** agregar estado global (Redux, Zustand, Context) sin justificación — no hay necesidad actual.
 3. **NO** modificar el sistema de animación principal sin entender que Framer Motion es core del diseño visual.
 4. **SEO**: Las meta-etiquetas deben agregarse en `index.html` (SSR no disponible).
-5. **i18n**: El proyecto está en español. NO mezclar idiomas. El `lang` en HTML debe ser `es`.
+5. **i18n**: El sitio es bilingüe (ES por defecto, EN con el botón ES/EN). Todo texto visible va en `{ es, en }` (diccionario `TEXT` por página o campos bilingües en `src/data/`), NUNCA hardcodeado en un solo idioma. Usar `useLang()` + `tr(valor, lang)`; cada página llama a `useDocumentMeta` con su título y descripción. `<html lang>` lo mantiene `LanguageProvider`. En el Lab, los textos del algoritmo (`synctuneMatcher`, `siemEngine`) no se traducen en el módulo: se mapean al mostrar.
 6. **Placeholders**: Buscar `placeholder`, `tu-usuario`, `TU_ID_DE` antes de asumir que los datos son reales.
 7. **Tailwind**: Usar siempre clases de Tailwind. NO agregar CSS manual salvo en `index.css` para estilos globales.
 8. **Animaciones**: Respetar `prefers-reduced-motion` — los `motion` elements deben soportar `useReducedMotion`.
@@ -148,6 +149,9 @@ src/main.jsx
 10. **Performance**: Event listeners deben usar `{ passive: true }` para scroll/wheel.
 11. **Cross-browser**: Estilos WebKit deben tener equivalentes para Firefox (scrollbar, etc.).
 12. **Imports**: Limpiar imports no utilizados antes de commitear.
+
+- **Idioma**: `src/i18n/LanguageProvider.jsx` guarda la elección en `localStorage` (`lang`); sin elección usa el idioma del navegador (`es*` → español, otro → inglés). Los class components (ErrorBoundary) leen `document.documentElement.lang`.
+- **Filtro de proyectos**: chips por tecnología en `Projects.jsx` (lista `FILTERS`); el estado vive en la página, no en la URL.
 
 ### Próximos Pasos Conocidos (Backlog)
 

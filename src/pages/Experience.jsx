@@ -2,9 +2,30 @@ import { FaBriefcase } from 'react-icons/fa';
 import { motion, useReducedMotion } from 'framer-motion';
 import experience from '../data/experience';
 import { EASE, fadeUp, staggerContainer, handleSpotlightMove } from '../lib/motion';
+import useLang from '../i18n/useLang';
+import tr from '../i18n/tr';
+import useDocumentMeta from '../i18n/useDocumentMeta';
+
+const TEXT = {
+  es: {
+    metaTitle: "Experiencia",
+    metaDescription: "Experiencia de Gianfranco Canciani como tutor en la UTN y profesor de programación en el Instituto Celsius.",
+    title: "Experiencia",
+    subtitle: "Docencia y tutoría en programación, combinando la enseñanza con el desarrollo de software.",
+  },
+  en: {
+    metaTitle: "Experience",
+    metaDescription: "Gianfranco Canciani's experience as a tutor at UTN and programming teacher at Instituto Celsius.",
+    title: "Experience",
+    subtitle: "Teaching and tutoring in programming, combining education with software development.",
+  },
+};
 
 export default function Experience() {
   const shouldReduceMotion = useReducedMotion();
+  const { lang } = useLang();
+  const t = TEXT[lang];
+  useDocumentMeta({ title: t.metaTitle, description: t.metaDescription });
 
   const containerVariants = staggerContainer(shouldReduceMotion, 0.18);
   const itemVariants = fadeUp(shouldReduceMotion, 30);
@@ -22,7 +43,7 @@ export default function Experience() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Experiencia
+            {t.title}
           </h2>
           <motion.div
             initial={{ width: 0 }}
@@ -31,7 +52,7 @@ export default function Experience() {
             className="h-1 bg-gradient-to-r from-stone-500 to-stone-200 mx-auto rounded-full mb-6"
           />
           <p className="text-stone-400 max-w-2xl mx-auto text-lg">
-            Docencia y tutoría en programación, combinando la enseñanza con el desarrollo de software.
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -72,20 +93,20 @@ export default function Experience() {
                   }`}
                 >
                   <p className="text-xs font-semibold tracking-wider text-stone-400 uppercase mb-2">
-                    {job.period}
+                    {tr(job.period, lang)}
                   </p>
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">{job.role}</h3>
-                  <p className="text-stone-300 font-medium mb-4">{job.org}</p>
-                  <p className="text-stone-400 leading-relaxed mb-5">{job.description}</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">{tr(job.role, lang)}</h3>
+                  <p className="text-stone-300 font-medium mb-4">{tr(job.org, lang)}</p>
+                  <p className="text-stone-400 leading-relaxed mb-5">{tr(job.description, lang)}</p>
 
                   <div className={`flex flex-wrap gap-2 ${alignRight ? "md:justify-end" : ""}`}>
-                    {job.tech.map((t) => (
+                    {job.tech.map((tag) => (
                       <motion.span
-                        key={t}
+                        key={tr(tag, "es")}
                         whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.10)" }}
                         className="bg-stone-900/50 border border-stone-600 text-stone-300 text-xs font-medium px-3 py-1 rounded-full cursor-default"
                       >
-                        {t}
+                        {tr(tag, lang)}
                       </motion.span>
                     ))}
                   </div>

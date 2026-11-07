@@ -2,14 +2,41 @@ import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
+import useLang from "../i18n/useLang";
+import tr from "../i18n/tr";
 
 const navLinks = [
-  { path: "/", label: "Inicio" },
-  { path: "/projects", label: "Proyectos" },
-  { path: "/experience", label: "Experiencia" },
+  { path: "/", label: { es: "Inicio", en: "Home" } },
+  { path: "/projects", label: { es: "Proyectos", en: "Projects" } },
+  { path: "/experience", label: { es: "Experiencia", en: "Experience" } },
   { path: "/lab", label: "Lab" },
-  { path: "/contact", label: "Contacto" },
+  { path: "/contact", label: { es: "Contacto", en: "Contact" } },
 ];
+
+// Selector ES / EN: muestra los dos idiomas y resalta el activo.
+function LanguageToggle() {
+  const { lang, toggleLang } = useLang();
+  return (
+    <button
+      type="button"
+      onClick={toggleLang}
+      className="flex items-center rounded-full border border-stone-700 bg-stone-900/60 p-0.5 text-xs font-semibold tracking-wide"
+      aria-label={lang === "es" ? "Cambiar idioma a inglés" : "Switch language to Spanish"}
+      title={lang === "es" ? "English" : "Español"}
+    >
+      {["es", "en"].map((code) => (
+        <span
+          key={code}
+          className={`px-2.5 py-1 rounded-full transition-colors ${
+            lang === code ? "bg-stone-100 text-stone-950" : "text-stone-400 hover:text-white"
+          }`}
+        >
+          {code.toUpperCase()}
+        </span>
+      ))}
+    </button>
+  );
+}
 
 const mobileStagger = {
   hidden: { opacity: 0 },
@@ -26,6 +53,7 @@ const mobileItem = {
 
 export default function Navbar() {
   const location = useLocation();
+  const { lang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -95,7 +123,7 @@ export default function Navbar() {
         </motion.div>
 
         {/* Links desktop */}
-        <div className="hidden md:flex gap-8">
+        <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
             <motion.div
               key={item.path}
@@ -110,7 +138,7 @@ export default function Navbar() {
                     : "text-stone-400 hover:text-white"
                 }`}
               >
-                {item.label}
+                {tr(item.label, lang)}
                 {isActive(item.path) && (
                   <motion.div
                     layoutId="activeTab"
@@ -121,19 +149,25 @@ export default function Navbar() {
               </Link>
             </motion.div>
           ))}
+          <LanguageToggle />
         </div>
 
-        {/* Botón hamburguesa mobile */}
-        <motion.button
-          onClick={() => setIsOpen(!isOpen)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="md:hidden p-2 text-stone-300 hover:text-white transition-colors"
-          aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
-          aria-expanded={isOpen}
-        >
-          {isOpen ? <HiX size={26} /> : <HiMenu size={26} />}
-        </motion.button>
+        {/* Mobile: idioma siempre visible + botón hamburguesa */}
+        <div className="md:hidden flex items-center gap-3">
+          <LanguageToggle />
+          <motion.button
+            onClick={() => setIsOpen(!isOpen)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="p-2 text-stone-300 hover:text-white transition-colors"
+            aria-label={
+              lang === "es" ? (isOpen ? "Cerrar menú" : "Abrir menú") : isOpen ? "Close menu" : "Open menu"
+            }
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <HiX size={26} /> : <HiMenu size={26} />}
+          </motion.button>
+        </div>
       </div>
 
       {/* Menú mobile overlay — backdrop y panel como hijos directos con key propia:
@@ -179,7 +213,7 @@ export default function Navbar() {
                         : "text-stone-300 hover:text-white hover:bg-stone-800/50"
                     }`}
                   >
-                    {item.label}
+                    {tr(item.label, lang)}
                   </Link>
                 </motion.div>
               ))}

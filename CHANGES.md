@@ -752,6 +752,31 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
+## ✅ Fase 12: Idiomas, SEO por página y filtro
+
+### 12.1 feat/i18n-es-en ✅
+
+**Objetivo**: poder postularse fuera de Argentina y que el inicio explique qué hace Gianfranco sin jerga.
+
+**Tareas**:
+- [x] Sistema ES/EN propio, sin librerías: `src/i18n/` (`LanguageProvider`, `useLang`, `tr`, `useDocumentMeta`). Se elige con el botón ES/EN del navbar (visible también en mobile), se guarda en `localStorage` y la primera vez usa el idioma del navegador
+- [x] Traducido todo el sitio: Inicio, Proyectos, Experiencia, Lab, Contacto, 404, Footer, errores y easter eggs (citas de Marco Aurelio, café, Konami, wololo, consola). Datos bilingües en `projects.js`, `experience.js`, `lab.js`
+- [x] Las 3 demos del Lab traducidas sin tocar los motores (`siemEngine.js`, `synctuneMatcher.js`): lo que muestran se traduce al renderizar
+- [x] Inicio: texto nuevo sin jerga ("SDD/OPSX" fuera del párrafo; queda como "Spec-Driven Development" en Metodologías), **Node.js eliminado** de todo el sitio, la docencia (UTN y Celsius) aparece en el hero y en Comunicación Efectiva
+- [x] `og-image.png` regenerada con la foto nueva y sin "SDD/OPSX"; `index.html` sin Node.js ni jerga
+
+### 12.2 feat/seo-por-pagina ✅
+
+- [x] `useDocumentMeta`: cada página define su `<title>` y `meta description` (ej. `Proyectos | Gianfranco Canciani`, `Lab — Demos interactivas | …`), en el idioma activo
+
+### 12.3 feat/filtro-proyectos ✅
+
+- [x] Chips por tecnología (Python, Java, React, TypeScript, FastAPI, Spring Boot, PostgreSQL, Docker) con contador y "Quitar filtro", accesibles (`aria-pressed`, `aria-live`)
+
+**Archivos**: nuevo `src/i18n/*`; modificados todas las páginas, `Navbar`, `Footer`, `ErrorBoundary`, easter eggs, `src/data/*`, `src/lib/quotes.js`, `src/lib/consoleEgg.js`, `index.html`, `og-image.png`. Bundle principal: 131.9 → 133.4 kB gzip.
+
+---
+
 ## ✅ Fase 11: Sección de Experiencia
 
 ### 11.1 feat/pagina-experiencia ✅

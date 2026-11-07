@@ -76,6 +76,7 @@ Cada demo aclara qué parte es real y qué parte es una versión simplificada de
     ├── index.css         # estilos globales
     ├── components/       # Navbar, Footer, ErrorBoundary, transiciones, easter eggs
     ├── data/             # proyectos, experiencia, demos del Lab, catálogo de SyncTune
+    ├── i18n/             # idioma ES/EN (provider, hooks, títulos por página)
     ├── lib/              # animaciones, lógica de las demos (MediaPipe, parpadeo, SyncTune, SIEM)
     └── pages/            # una página por ruta (lazy); lab/ con las demos
 ```
@@ -86,6 +87,9 @@ Se despliega en Vercel desde la rama `main`. `vercel.json` redirige todas las ru
 
 ## Detalles
 
+- **Bilingüe**: español e inglés con un botón ES/EN. Recuerda la elección y, la primera vez, usa el idioma del navegador.
+- Título y descripción propios en cada página.
+- Filtro de proyectos por tecnología.
 - Respeta `prefers-reduced-motion`.
 - Skip-link y navegación por teclado.
 - Hay algunos easter eggs escondidos. 😉

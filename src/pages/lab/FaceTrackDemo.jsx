@@ -6,25 +6,157 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { loadFaceLandmarker } from '../../lib/faceLandmarker';
 import { CLOSE_THRESHOLD, createBlinkTracker, eyeClosureScore } from '../../lib/blink';
 import { EASE } from '../../lib/motion';
+import useLang from '../../i18n/useLang';
+import useDocumentMeta from '../../i18n/useDocumentMeta';
 
 const CHALLENGE_BLINKS = 2;
 const CHALLENGE_SECONDS = 10;
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
+const TEXT = {
+  es: {
+    metaTitle: "FaceTrack — Demo en vivo",
+    metaDescription: "Probá en tu navegador la detección de rostros, la malla de 478 landmarks, el seguimiento de parpadeo y un desafío de liveness con MediaPipe.",
+    back: "Volver al Lab",
+    titleSuffix: "— demo en vivo",
+    intro: "Detección de rostros, malla de landmarks, seguimiento de parpadeo y un desafío de liveness, con el mismo motor de visión (MediaPipe) que usa FaceTrack.",
+    privacyBefore: "Todo corre en tu navegador: la imagen de tu cámara ",
+    privacyStrong: "no se envía ni se guarda",
+    privacyAfter: " en ningún lado. Al iniciar se descargan unos 7 MB (motor de visión y modelo) — solo la primera vez, después quedan en caché.",
+    idleHint: "Iniciá la cámara o subí una foto para empezar.",
+    loading: "Cargando motor de visión…",
+    startCamera: "Iniciar cámara",
+    stop: "Detener",
+    uploadPhoto: "Subir foto",
+    statFaces: "Rostros",
+    statEyes: "Ojos",
+    statBlinks: "Parpadeos",
+    statFps: "FPS",
+    eyeClosed: "cerrado",
+    eyeOpen: "abierto",
+    challengeTitle: "Desafío de liveness",
+    challengeDesc: (blinks, seconds) => `Parpadeá ${blinks} veces en ${seconds} segundos para demostrar que sos una persona frente a la cámara y no una foto.`,
+    challengeStart: "Iniciar desafío",
+    challengeNeedsCamera: "Necesita la cámara encendida",
+    noFace: "No veo ningún rostro…",
+    blinkNow: "¡Parpadeá!",
+    live: "LIVE",
+    unknown: "UNKNOWN — no concluyente",
+    challengeRepeat: "Repetir desafío",
+    challengeNote: "Es una prueba básica, no un mecanismo de seguridad biométrica.",
+    pipelineTitle: "Pipeline",
+    stepCamera: "Cámara",
+    stepImage: "Imagen",
+    stepDetection: "Detección de rostro",
+    stepLandmarks: "478 landmarks",
+    stepBlink: "Seguimiento de parpadeo",
+    stepLiveness: "Liveness",
+    realTitle: "Qué es real en esta demo",
+    real: [
+      "Detección de hasta 4 rostros por frame.",
+      "Malla de 478 landmarks faciales en tiempo real.",
+      "Parpadeo detectado a partir de los blendshapes del modelo.",
+      "Desafío de liveness por parpadeo.",
+    ],
+    fullTitle: "Qué queda en el proyecto completo",
+    full: [
+      "Reconocimiento de identidad con embeddings (conocido / desconocido).",
+      "Gestión de personas, asistencia e historial en PostgreSQL.",
+      "API REST en FastAPI y dashboard de estadísticas.",
+    ],
+    viewCode: "Ver el código de FaceTrack",
+    errors: {
+      noApi: "Tu navegador no permite acceder a la cámara (hace falta HTTPS o un navegador más reciente).",
+      denied: "No se otorgó permiso para usar la cámara. Podés habilitarlo desde la barra de direcciones, o probar subiendo una foto.",
+      notFound: "No se encontró ninguna cámara. Podés probar la demo subiendo una foto.",
+      inUse: "La cámara está siendo usada por otra aplicación.",
+      cameraFail: "No se pudo iniciar la cámara.",
+      model: "No se pudo cargar el modelo de visión. Revisá tu conexión e intentá de nuevo.",
+      notImage: "El archivo tiene que ser una imagen.",
+      tooBig: "La imagen supera los 10 MB.",
+      imageFail: "No se pudo procesar la imagen. Probá con otra foto o revisá tu conexión.",
+    },
+  },
+  en: {
+    metaTitle: "FaceTrack — Live demo",
+    metaDescription: "Try face detection, a 478-landmark mesh, blink tracking and a liveness challenge right in your browser, powered by MediaPipe.",
+    back: "Back to Lab",
+    titleSuffix: "— live demo",
+    intro: "Face detection, landmark mesh, blink tracking and a liveness challenge, using the same vision engine (MediaPipe) that FaceTrack runs on.",
+    privacyBefore: "Everything runs in your browser: your camera image ",
+    privacyStrong: "is never sent or stored",
+    privacyAfter: " anywhere. On start, about 7 MB are downloaded (vision engine and model) — only the first time, then they stay cached.",
+    idleHint: "Start the camera or upload a photo to begin.",
+    loading: "Loading vision engine…",
+    startCamera: "Start camera",
+    stop: "Stop",
+    uploadPhoto: "Upload photo",
+    statFaces: "Faces",
+    statEyes: "Eyes",
+    statBlinks: "Blinks",
+    statFps: "FPS",
+    eyeClosed: "closed",
+    eyeOpen: "open",
+    challengeTitle: "Liveness challenge",
+    challengeDesc: (blinks, seconds) => `Blink ${blinks} times within ${seconds} seconds to prove you are a real person in front of the camera and not a photo.`,
+    challengeStart: "Start challenge",
+    challengeNeedsCamera: "Camera must be on",
+    noFace: "I can't see any face…",
+    blinkNow: "Blink!",
+    live: "LIVE",
+    unknown: "UNKNOWN — inconclusive",
+    challengeRepeat: "Repeat challenge",
+    challengeNote: "This is a basic test, not a biometric security mechanism.",
+    pipelineTitle: "Pipeline",
+    stepCamera: "Camera",
+    stepImage: "Image",
+    stepDetection: "Face detection",
+    stepLandmarks: "478 landmarks",
+    stepBlink: "Blink tracking",
+    stepLiveness: "Liveness",
+    realTitle: "What is real in this demo",
+    real: [
+      "Detection of up to 4 faces per frame.",
+      "Real-time mesh of 478 facial landmarks.",
+      "Blinks detected from the model's blendshapes.",
+      "Blink-based liveness challenge.",
+    ],
+    fullTitle: "What the full project adds",
+    full: [
+      "Identity recognition with embeddings (known / unknown).",
+      "People management, attendance and history in PostgreSQL.",
+      "REST API in FastAPI and a statistics dashboard.",
+    ],
+    viewCode: "View the FaceTrack code",
+    errors: {
+      noApi: "Your browser can't access the camera (HTTPS or a more recent browser is required).",
+      denied: "Camera permission was not granted. You can enable it from the address bar, or try uploading a photo.",
+      notFound: "No camera found. You can try the demo by uploading a photo.",
+      inUse: "The camera is being used by another application.",
+      cameraFail: "Could not start the camera.",
+      model: "Could not load the vision model. Check your connection and try again.",
+      notImage: "The file must be an image.",
+      tooBig: "The image exceeds 10 MB.",
+      imageFail: "Could not process the image. Try another photo or check your connection.",
+    },
+  },
+};
+
 const EMPTY_STATS = { faces: 0, eye: null, blinks: 0, fps: 0 };
 
-function cameraErrorMessage(err) {
-  if (!navigator.mediaDevices?.getUserMedia) return "Tu navegador no permite acceder a la cámara (hace falta HTTPS o un navegador más reciente).";
+// Devuelve un código de error; el texto se resuelve al renderizar según el idioma.
+function cameraErrorCode(err) {
+  if (!navigator.mediaDevices?.getUserMedia) return "noApi";
   switch (err?.name) {
     case "NotAllowedError":
-      return "No se otorgó permiso para usar la cámara. Podés habilitarlo desde la barra de direcciones, o probar subiendo una foto.";
+      return "denied";
     case "NotFoundError":
     case "OverconstrainedError":
-      return "No se encontró ninguna cámara. Podés probar la demo subiendo una foto.";
+      return "notFound";
     case "NotReadableError":
-      return "La cámara está siendo usada por otra aplicación.";
+      return "inUse";
     default:
-      return null;
+      return "cameraFail";
   }
 }
 
@@ -52,6 +184,9 @@ function drawFaces(ctx, drawer, FaceLandmarker, faces, width, height) {
 }
 
 export default function FaceTrackDemo() {
+  const { lang } = useLang();
+  const t = TEXT[lang];
+  useDocumentMeta({ title: t.metaTitle, description: t.metaDescription });
   const shouldReduceMotion = useReducedMotion();
 
   const [phase, setPhase] = useState("idle"); // idle | loading | ready | error
@@ -153,7 +288,7 @@ export default function FaceTrackDemo() {
         if (faces > 0) {
           const { closed, blinked } = blinkTrackerRef.current.update(eyeClosureScore(result.faceBlendshapes?.[0]));
           if (blinked) blinkCountRef.current += 1;
-          eye = closed ? "cerrado" : "abierto";
+          eye = closed ? "closed" : "open";
         }
 
         const fps = fpsRef.current;
@@ -185,7 +320,7 @@ export default function FaceTrackDemo() {
         audio: false,
       });
     } catch (err) {
-      setError(cameraErrorMessage(err) || "No se pudo iniciar la cámara.");
+      setError(cameraErrorCode(err));
       setPhase("error");
       return;
     }
@@ -202,7 +337,7 @@ export default function FaceTrackDemo() {
     } catch (err) {
       console.error("FaceTrack demo: no se pudo cargar el modelo", err);
       stopCamera();
-      setError("No se pudo cargar el modelo de visión. Revisá tu conexión e intentá de nuevo.");
+      setError("model");
       setPhase("error");
       return;
     }
@@ -227,12 +362,12 @@ export default function FaceTrackDemo() {
     e.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("El archivo tiene que ser una imagen.");
+      setError("notImage");
       setPhase("error");
       return;
     }
     if (file.size > MAX_PHOTO_BYTES) {
-      setError("La imagen supera los 10 MB.");
+      setError("tooBig");
       setPhase("error");
       return;
     }
@@ -259,12 +394,12 @@ export default function FaceTrackDemo() {
 
       const faces = result.faceLandmarks.length;
       const score = faces > 0 ? eyeClosureScore(result.faceBlendshapes?.[0]) : null;
-      pushStats({ faces, eye: score == null ? null : score >= CLOSE_THRESHOLD ? "cerrado" : "abierto", blinks: 0, fps: 0 });
+      pushStats({ faces, eye: score == null ? null : score >= CLOSE_THRESHOLD ? "closed" : "open", blinks: 0, fps: 0 });
       setPhotoMode(true);
       setPhase("ready");
     } catch (err) {
       console.error("FaceTrack demo: no se pudo procesar la imagen", err);
-      setError("No se pudo procesar la imagen. Probá con otra foto o revisá tu conexión.");
+      setError("imageFail");
       setPhase("error");
     } finally {
       URL.revokeObjectURL(url);
@@ -283,11 +418,11 @@ export default function FaceTrackDemo() {
 
   const detecting = phase === "ready" && stats.faces > 0;
   const pipeline = [
-    { label: cameraOn ? "Cámara" : "Imagen", active: phase === "ready" },
-    { label: "Detección de rostro", active: detecting },
-    { label: "478 landmarks", active: detecting },
-    { label: "Seguimiento de parpadeo", active: detecting && cameraOn },
-    { label: "Liveness", active: challenge.state === "live" },
+    { id: "source", label: cameraOn ? t.stepCamera : t.stepImage, active: phase === "ready" },
+    { id: "detection", label: t.stepDetection, active: detecting },
+    { id: "landmarks", label: t.stepLandmarks, active: detecting },
+    { id: "blink", label: t.stepBlink, active: detecting && cameraOn },
+    { id: "liveness", label: t.stepLiveness, active: challenge.state === "live" },
   ];
 
   const fadeIn = shouldReduceMotion ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 } };
@@ -297,21 +432,20 @@ export default function FaceTrackDemo() {
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div {...fadeIn} transition={{ duration: 0.6, ease: EASE }} className="mb-8">
           <Link to="/lab" className="inline-flex items-center gap-2 text-sm text-stone-400 hover:text-white transition-colors mb-6">
-            <LuArrowLeft className="text-xs" /> Volver al Lab
+            <LuArrowLeft className="text-xs" /> {t.back}
           </Link>
           <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
-            FaceTrack <span className="text-stone-500">— demo en vivo</span>
+            FaceTrack <span className="text-stone-500">{t.titleSuffix}</span>
           </h1>
           <p className="text-stone-400 max-w-3xl text-lg leading-relaxed">
-            Detección de rostros, malla de landmarks, seguimiento de parpadeo y un desafío de liveness, con el mismo motor de visión (MediaPipe) que usa FaceTrack.
+            {t.intro}
           </p>
         </motion.div>
 
         <div className="flex items-start gap-3 bg-stone-800/50 border border-stone-700/50 rounded-xl px-5 py-4 mb-8 text-sm text-stone-300">
           <LuLock className="mt-0.5 shrink-0 text-stone-400" />
           <p>
-            Todo corre en tu navegador: la imagen de tu cámara <strong className="text-white">no se envía ni se guarda</strong> en ningún lado.
-            Al iniciar se descargan unos 7 MB (motor de visión y modelo) — solo la primera vez, después quedan en caché.
+            {t.privacyBefore}<strong className="text-white">{t.privacyStrong}</strong>{t.privacyAfter}
           </p>
         </div>
 
@@ -341,21 +475,21 @@ export default function FaceTrackDemo() {
               {phase === "idle" && !cameraOn && !photoMode && (
                 <div className="text-center px-6 py-16">
                   <LuVideo className="text-4xl text-stone-600 mx-auto mb-4" />
-                  <p className="text-stone-400">Iniciá la cámara o subí una foto para empezar.</p>
+                  <p className="text-stone-400">{t.idleHint}</p>
                 </div>
               )}
 
               {phase === "loading" && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-stone-950/70 text-stone-300">
                   <div className="w-10 h-10 rounded-full border-2 border-stone-700 border-t-white animate-spin" />
-                  <p className="text-sm">Cargando motor de visión…</p>
+                  <p className="text-sm">{t.loading}</p>
                 </div>
               )}
 
               {phase === "error" && (
                 <div className="text-center px-6 py-16 max-w-md">
                   <FaExclamationTriangle className="text-3xl text-amber-400 mx-auto mb-4" />
-                  <p className="text-stone-300">{error}</p>
+                  <p className="text-stone-300">{t.errors[error]}</p>
                 </div>
               )}
             </div>
@@ -368,7 +502,7 @@ export default function FaceTrackDemo() {
                   disabled={phase === "loading"}
                   className="btn-shine inline-flex items-center gap-2 bg-stone-100 hover:bg-white disabled:bg-stone-500 disabled:cursor-not-allowed text-stone-950 px-5 py-2.5 rounded-lg font-medium transition-colors"
                 >
-                  <LuVideo className="text-sm" /> Iniciar cámara
+                  <LuVideo className="text-sm" /> {t.startCamera}
                 </button>
               ) : (
                 <button
@@ -376,7 +510,7 @@ export default function FaceTrackDemo() {
                   onClick={handleStop}
                   className="inline-flex items-center gap-2 bg-stone-700 hover:bg-stone-600 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
                 >
-                  <LuSquare className="text-sm" /> Detener
+                  <LuSquare className="text-sm" /> {t.stop}
                 </button>
               )}
               <button
@@ -385,7 +519,7 @@ export default function FaceTrackDemo() {
                 disabled={phase === "loading"}
                 className="inline-flex items-center gap-2 bg-stone-800 hover:bg-stone-700 disabled:opacity-50 disabled:cursor-not-allowed text-stone-200 px-5 py-2.5 rounded-lg font-medium border border-stone-700 transition-colors"
               >
-                <LuImage className="text-sm" /> Subir foto
+                <LuImage className="text-sm" /> {t.uploadPhoto}
               </button>
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
             </div>
@@ -395,12 +529,12 @@ export default function FaceTrackDemo() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Rostros", value: phase === "ready" ? stats.faces : "—" },
-                { label: "Ojos", value: stats.eye ?? "—" },
-                { label: "Parpadeos", value: cameraOn && phase === "ready" ? stats.blinks : "—" },
-                { label: "FPS", value: cameraOn && stats.fps ? stats.fps : "—" },
-              ].map(({ label, value }) => (
-                <div key={label} className="bg-stone-800/50 border border-stone-700/50 rounded-xl p-4">
+                { id: "faces", label: t.statFaces, value: phase === "ready" ? stats.faces : "—" },
+                { id: "eyes", label: t.statEyes, value: stats.eye === "closed" ? t.eyeClosed : stats.eye === "open" ? t.eyeOpen : "—" },
+                { id: "blinks", label: t.statBlinks, value: cameraOn && phase === "ready" ? stats.blinks : "—" },
+                { id: "fps", label: t.statFps, value: cameraOn && stats.fps ? stats.fps : "—" },
+              ].map(({ id, label, value }) => (
+                <div key={id} className="bg-stone-800/50 border border-stone-700/50 rounded-xl p-4">
                   <p className="text-xs uppercase tracking-wider text-stone-500 mb-1">{label}</p>
                   <p className="text-2xl font-bold text-white capitalize tabular-nums">{value}</p>
                 </div>
@@ -408,9 +542,9 @@ export default function FaceTrackDemo() {
             </div>
 
             <div className="bg-stone-800/50 border border-stone-700/50 rounded-xl p-5">
-              <h3 className="text-white font-bold mb-1">Desafío de liveness</h3>
+              <h3 className="text-white font-bold mb-1">{t.challengeTitle}</h3>
               <p className="text-sm text-stone-400 mb-4">
-                Parpadeá {CHALLENGE_BLINKS} veces en {CHALLENGE_SECONDS} segundos para demostrar que sos una persona frente a la cámara y no una foto.
+                {t.challengeDesc(CHALLENGE_BLINKS, CHALLENGE_SECONDS)}
               </p>
 
               {challenge.state === "idle" && (
@@ -420,22 +554,22 @@ export default function FaceTrackDemo() {
                   disabled={!cameraOn || phase !== "ready"}
                   className="w-full bg-stone-100 hover:bg-white disabled:bg-stone-700 disabled:text-stone-500 disabled:cursor-not-allowed text-stone-950 px-4 py-2.5 rounded-lg font-medium transition-colors"
                 >
-                  {cameraOn ? "Iniciar desafío" : "Necesita la cámara encendida"}
+                  {cameraOn ? t.challengeStart : t.challengeNeedsCamera}
                 </button>
               )}
               {challenge.state === "active" && (
                 <p className="text-center text-lg font-bold text-white py-2">
-                  {stats.faces === 0 ? "No veo ningún rostro…" : "¡Parpadeá!"}{" "}
+                  {stats.faces === 0 ? t.noFace : t.blinkNow}{" "}
                   <span className="text-stone-400 font-medium tabular-nums">{challenge.remaining}s</span>
                 </p>
               )}
               {challenge.state === "live" && (
                 <div className="flex items-center justify-center gap-2 text-green-400 font-bold text-lg py-2">
-                  <LuCircleCheck /> LIVE
+                  <LuCircleCheck /> {t.live}
                 </div>
               )}
               {challenge.state === "timeout" && (
-                <p className="text-center text-amber-400 font-bold py-2">UNKNOWN — no concluyente</p>
+                <p className="text-center text-amber-400 font-bold py-2">{t.unknown}</p>
               )}
               {(challenge.state === "live" || challenge.state === "timeout") && (
                 <button
@@ -443,19 +577,19 @@ export default function FaceTrackDemo() {
                   onClick={startChallenge}
                   className="w-full mt-2 text-sm text-stone-400 hover:text-white transition-colors"
                 >
-                  Repetir desafío
+                  {t.challengeRepeat}
                 </button>
               )}
               <p className="text-xs text-stone-500 mt-4">
-                Es una prueba básica, no un mecanismo de seguridad biométrica.
+                {t.challengeNote}
               </p>
             </div>
 
             <div className="bg-stone-800/50 border border-stone-700/50 rounded-xl p-5">
-              <h3 className="text-white font-bold mb-4">Pipeline</h3>
+              <h3 className="text-white font-bold mb-4">{t.pipelineTitle}</h3>
               <ol className="space-y-3">
                 {pipeline.map((step, i) => (
-                  <li key={step.label} className="flex items-center gap-3">
+                  <li key={step.id} className="flex items-center gap-3">
                     <span
                       className={`w-6 h-6 shrink-0 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                         step.active ? "bg-stone-100 text-stone-950" : "bg-stone-800 text-stone-500 border border-stone-700"
@@ -474,20 +608,19 @@ export default function FaceTrackDemo() {
         {/* Qué es real */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
           <div className="bg-stone-800/30 border border-stone-700/40 rounded-xl p-6">
-            <h3 className="text-white font-bold mb-3">Qué es real en esta demo</h3>
+            <h3 className="text-white font-bold mb-3">{t.realTitle}</h3>
             <ul className="space-y-2 text-sm text-stone-400 list-disc pl-5">
-              <li>Detección de hasta 4 rostros por frame.</li>
-              <li>Malla de 478 landmarks faciales en tiempo real.</li>
-              <li>Parpadeo detectado a partir de los blendshapes del modelo.</li>
-              <li>Desafío de liveness por parpadeo.</li>
+              {t.real.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </div>
           <div className="bg-stone-800/30 border border-stone-700/40 rounded-xl p-6">
-            <h3 className="text-white font-bold mb-3">Qué queda en el proyecto completo</h3>
+            <h3 className="text-white font-bold mb-3">{t.fullTitle}</h3>
             <ul className="space-y-2 text-sm text-stone-400 list-disc pl-5">
-              <li>Reconocimiento de identidad con embeddings (conocido / desconocido).</li>
-              <li>Gestión de personas, asistencia e historial en PostgreSQL.</li>
-              <li>API REST en FastAPI y dashboard de estadísticas.</li>
+              {t.full.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
             <a
               href="https://github.com/Gianfranco05/reconocimiento_facial"
@@ -495,7 +628,7 @@ export default function FaceTrackDemo() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-4 text-sm text-stone-300 hover:text-white transition-colors"
             >
-              <FaGithub /> Ver el código de FaceTrack
+              <FaGithub /> {t.viewCode}
             </a>
           </div>
         </div>

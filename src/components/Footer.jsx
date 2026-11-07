@@ -3,14 +3,35 @@ import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MEDITATIONS_AUTHOR, randomQuote } from '../lib/quotes';
+import useLang from '../i18n/useLang';
+import tr from '../i18n/tr';
 
 const footerLinks = [
-  { to: "/", label: "Inicio" },
-  { to: "/projects", label: "Proyectos" },
-  { to: "/experience", label: "Experiencia" },
+  { to: "/", label: { es: "Inicio", en: "Home" } },
+  { to: "/projects", label: { es: "Proyectos", en: "Projects" } },
+  { to: "/experience", label: { es: "Experiencia", en: "Experience" } },
   { to: "/lab", label: "Lab" },
-  { to: "/contact", label: "Contacto" },
+  { to: "/contact", label: { es: "Contacto", en: "Contact" } },
 ];
+
+const TEXT = {
+  es: {
+    tagline: "Desarrollador de software y docente IT.",
+    nav: "Navegación",
+    social: "Redes",
+    rights: "{t.rights}",
+    coffeeLabel: "Invitame un café",
+    coffee: (n, line) => `☕ café #${n} — ${line}`,
+  },
+  en: {
+    tagline: "Software developer and IT teacher.",
+    nav: "Navigation",
+    social: "Social",
+    rights: "All rights reserved.",
+    coffeeLabel: "Buy me a coffee",
+    coffee: (n, line) => `☕ coffee #${n} — ${line}`,
+  },
+};
 
 const socialLinks = [
   { href: "https://github.com/Gianfranco05", icon: FaGithub, hoverClass: "hover:bg-stone-100 hover:text-stone-950", label: "GitHub" },
@@ -18,17 +39,28 @@ const socialLinks = [
   { href: "https://instagram.com/gianfranco.c05", icon: FaInstagram, hoverClass: "hover:bg-pink-600 hover:text-white", label: "Instagram" },
 ];
 
-const COFFEE_LINES = [
-  "compilando ideas...",
-  "sin esto no hay commits.",
-  "nivel de cafeína: óptimo.",
-  "el código fluye mejor así.",
-  "un bug menos gracias a este café.",
-];
+const COFFEE_LINES = {
+  es: [
+    "compilando ideas...",
+    "sin esto no hay commits.",
+    "nivel de cafeína: óptimo.",
+    "el código fluye mejor así.",
+    "un bug menos gracias a este café.",
+  ],
+  en: [
+    "compiling ideas...",
+    "no coffee, no commits.",
+    "caffeine level: optimal.",
+    "code flows better this way.",
+    "one less bug thanks to this coffee.",
+  ],
+};
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const shouldReduceMotion = useReducedMotion();
+  const { lang } = useLang();
+  const t = TEXT[lang];
 
   // Easter egg: 3 clicks rápidos en "GC." — cita de Meditaciones, Marco Aurelio
   const [quote, setQuote] = useState(null);
@@ -39,13 +71,14 @@ export default function Footer() {
     clickTimes.current = [...clickTimes.current.filter((t) => now - t < 700), now];
     if (clickTimes.current.length >= 3) {
       clickTimes.current = [];
-      setQuote(randomQuote());
+      setQuote(randomQuote(lang));
       setTimeout(() => setQuote(null), 6500);
     }
   };
 
   // Easter egg: taza de café — contador persistente en localStorage
   const [coffeeCount, setCoffeeCount] = useState(0);
+  // Se guarda el índice de la frase (no el texto) para que siga el idioma si se cambia mientras se muestra.
   const [coffeeMsg, setCoffeeMsg] = useState(null);
   // Ref (no state) para bloquear clicks superpuestos: el estado tarda un render en
   // reflejarse, y varios taps muy rápidos podían colarse antes de que se actualice.
@@ -72,7 +105,7 @@ export default function Footer() {
       }
       return next;
     });
-    setCoffeeMsg(COFFEE_LINES[Math.floor(Math.random() * COFFEE_LINES.length)]);
+    setCoffeeMsg(Math.floor(Math.random() * COFFEE_LINES.es.length));
     setTimeout(() => {
       setCoffeeMsg(null);
       coffeeBusyRef.current = false;
@@ -93,7 +126,7 @@ export default function Footer() {
               GC<span className="text-stone-400">.</span>
             </motion.p>
             <p className="text-stone-400 text-sm leading-relaxed">
-              Desarrollador de software y docente IT.
+              {t.tagline}
               <br />
               Mendoza, Argentina.
             </p>
@@ -102,7 +135,7 @@ export default function Footer() {
           {/* Navegación rápida */}
           <div>
             <h4 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-4">
-              Navegación
+              {t.nav}
             </h4>
             <ul className="space-y-2">
               {footerLinks.map((link) => (
@@ -115,7 +148,7 @@ export default function Footer() {
                     to={link.to}
                     className="text-stone-400 hover:text-white transition-colors text-sm"
                   >
-                    {link.label}
+                    {tr(link.label, lang)}
                   </Link>
                 </motion.li>
               ))}
@@ -125,7 +158,7 @@ export default function Footer() {
           {/* Redes */}
           <div>
             <h4 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-4">
-              Redes
+              {t.social}
             </h4>
             <div className="flex gap-4">
               {socialLinks.map(({ href, icon: Icon, hoverClass, label }) => (
@@ -148,7 +181,7 @@ export default function Footer() {
 
         <div className="border-t border-stone-800/50 pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3">
           <p className="text-stone-500 text-xs order-2 sm:order-1">
-            &copy; {year} Gianfranco Canciani. Todos los derechos reservados.
+            &copy; {year} Gianfranco Canciani. {t.rights}
           </p>
 
           {/* Easter egg: taza de café — clic para sumar una */}
@@ -156,16 +189,16 @@ export default function Footer() {
             <button
               type="button"
               onClick={handleCoffeeClick}
-              disabled={!!coffeeMsg}
+              disabled={coffeeMsg !== null}
               className={`flex items-center gap-1.5 transition-colors ${
-                coffeeMsg ? "text-stone-300 cursor-default" : "text-stone-600 hover:text-stone-300"
+                coffeeMsg !== null ? "text-stone-300 cursor-default" : "text-stone-600 hover:text-stone-300"
               }`}
-              aria-label="Invitame un café"
+              aria-label={t.coffeeLabel}
             >
               <span className="relative text-base leading-none">
                 ☕
                 <AnimatePresence>
-                  {!shouldReduceMotion && coffeeMsg && (
+                  {!shouldReduceMotion && coffeeMsg !== null && (
                     <>
                       <motion.span
                         initial={{ opacity: 0.7, y: 0 }}
@@ -193,14 +226,14 @@ export default function Footer() {
             </button>
 
             <AnimatePresence>
-              {coffeeMsg && (
+              {coffeeMsg !== null && (
                 <motion.p
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   className="absolute bottom-full right-0 mb-2 text-[11px] text-stone-300 whitespace-nowrap bg-stone-800 border border-stone-700 px-3 py-1.5 rounded-lg shadow-lg z-10"
                 >
-                  ☕ café #{coffeeCount} — {coffeeMsg}
+                  {t.coffee(coffeeCount, COFFEE_LINES[lang][coffeeMsg])}
                 </motion.p>
               )}
             </AnimatePresence>
@@ -220,7 +253,7 @@ export default function Footer() {
             role="status"
           >
             <p className="text-stone-100 italic leading-relaxed">&ldquo;{quote}&rdquo;</p>
-            <p className="text-stone-500 text-xs mt-3 tracking-wide">— {MEDITATIONS_AUTHOR}</p>
+            <p className="text-stone-500 text-xs mt-3 tracking-wide">— {MEDITATIONS_AUTHOR[lang]}</p>
           </motion.div>
         )}
       </AnimatePresence>
