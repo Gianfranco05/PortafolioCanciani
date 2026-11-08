@@ -70,8 +70,8 @@ const specialtyCards = [
     icon: FaMobileAlt,
     title: { es: "Apps Mobile", en: "Mobile Apps" },
     text: {
-      es: "Aplicaciones para Android e iOS con React Native y Expo, conectadas a APIs propias en FastAPI. Una misma base de código en TypeScript para las dos plataformas.",
-      en: "Android and iOS apps built with React Native and Expo, connected to my own FastAPI backends. One TypeScript codebase for both platforms.",
+      es: "Aplicaciones para Android con React Native y Expo, conectadas a APIs propias en FastAPI y desarrolladas en TypeScript.",
+      en: "Android apps built with React Native and Expo, connected to my own FastAPI backends and written in TypeScript.",
     },
   },
   {
