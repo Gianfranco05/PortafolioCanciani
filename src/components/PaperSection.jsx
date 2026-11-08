@@ -7,14 +7,12 @@ import useLang from "../i18n/useLang";
 
 const TEXT = {
   es: {
-    badge: "Dato curioso",
-    text: "Programo en papel: resuelvo los algoritmos a mano en el cuaderno antes de escribir una línea de código.",
+    badge: "Dato curioso: Programo en papel",
     toPaper: "Probar el modo papel",
     toDark: "Volver al modo oscuro",
   },
   en: {
-    badge: "Fun fact",
-    text: "I code on paper: I work algorithms out by hand in a notebook before writing a single line of code.",
+    badge: "Fun fact: I code on paper",
     toPaper: "Try paper mode",
     toDark: "Back to dark mode",
   },
@@ -32,10 +30,9 @@ export default function PaperSection() {
 
   return (
     <motion.div {...fade} viewport={{ once: true }} transition={{ duration: 0.7, ease: EASE }} className="mt-32 max-w-2xl mx-auto text-center">
-      <span className="inline-block py-1 px-3 rounded-full bg-white/5 text-stone-300 text-xs font-semibold tracking-wider uppercase mb-4 border border-white/15">
+      <span className="block w-fit mx-auto py-1 px-3 rounded-full bg-white/5 text-stone-300 text-xs font-semibold tracking-wider uppercase mb-6 border border-white/15">
         ✎ {t.badge}
       </span>
-      <p className="text-stone-300 text-lg mb-6">{t.text}</p>
       <button
         type="button"
         onClick={toggleTheme}
