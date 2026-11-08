@@ -44,7 +44,7 @@ const TEXT = {
 };
 
 // Tecnologías que se ofrecen como filtro (las más relevantes; el resto sigue visible en cada tarjeta).
-const FILTERS = ["Python", "Java", "React", "TypeScript", "FastAPI", "Spring Boot", "PostgreSQL", "Docker"];
+const FILTERS = ["Python", "Java", "React", "React Native", "TypeScript", "FastAPI", "Spring Boot", "PostgreSQL", "Docker"];
 
 export default function Projects() {
   const shouldReduceMotion = useReducedMotion();

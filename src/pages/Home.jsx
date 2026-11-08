@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaGithub, FaLinkedin, FaInstagram, FaServer, FaCode, FaDatabase, FaUsers, FaBrain, FaRocket, FaHandshake, FaBook, FaDownload } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaInstagram, FaServer, FaCode, FaDatabase, FaUsers, FaBrain, FaRocket, FaHandshake, FaBook, FaDownload, FaMobileAlt } from 'react-icons/fa';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import { motion, useReducedMotion } from 'framer-motion';
 import { EASE, fadeUp, handleSpotlightMove } from '../lib/motion';
@@ -13,10 +13,10 @@ import useDocumentMeta from '../i18n/useDocumentMeta';
 const TEXT = {
   es: {
     metaTitle: "Desarrollador de Software",
-    metaDescription: "Gianfranco Canciani, desarrollador backend y docente de programación en Mendoza, Argentina. Proyectos con Python, Java y React y demos para probar en vivo.",
+    metaDescription: "Gianfranco Canciani, desarrollador backend y docente de programación en Mendoza, Argentina. Proyectos con Python, Java, React y React Native (apps mobile) y demos para probar en vivo.",
     badge: "Desarrollador de Software · Docente",
     hello: "Hola, soy",
-    intro: "Soy desarrollador backend en Mendoza, Argentina. Construyo APIs y aplicaciones web con Python (FastAPI), Java (Spring Boot) y React, y enseño programación en la UTN y en el Instituto Celsius. Me gusta resolver problemas reales con código claro: desde reconocer rostros en vivo hasta detectar ataques en logs con machine learning.",
+    intro: "Soy desarrollador backend en Mendoza, Argentina. Construyo APIs y aplicaciones web con Python (FastAPI), Java (Spring Boot) y React, además de apps mobile con React Native y Expo, y enseño programación en la UTN y en el Instituto Celsius. Me gusta resolver problemas reales con código claro: desde reconocer rostros en vivo hasta detectar ataques en logs con machine learning.",
     exploreProjects: "Explorar Proyectos",
     downloadCv: "Descargar CV",
     coinBack: "Volver a mostrar la foto",
@@ -34,10 +34,10 @@ const TEXT = {
   },
   en: {
     metaTitle: "Software Developer",
-    metaDescription: "Gianfranco Canciani, backend developer and programming teacher in Mendoza, Argentina. Python, Java and React projects with live demos.",
+    metaDescription: "Gianfranco Canciani, backend developer and programming teacher in Mendoza, Argentina. Python, Java, React and React Native (mobile apps) projects with live demos.",
     badge: "Software Developer · Teacher",
     hello: "Hi, I'm",
-    intro: "I'm a backend developer based in Mendoza, Argentina. I build APIs and web apps with Python (FastAPI), Java (Spring Boot) and React, and I teach programming at UTN and Instituto Celsius. I enjoy solving real problems with clean code — from recognizing faces live to detecting attacks in logs with machine learning.",
+    intro: "I'm a backend developer based in Mendoza, Argentina. I build APIs and web apps with Python (FastAPI), Java (Spring Boot) and React, plus mobile apps with React Native and Expo, and I teach programming at UTN and Instituto Celsius. I enjoy solving real problems with clean code — from recognizing faces live to detecting attacks in logs with machine learning.",
     exploreProjects: "Explore Projects",
     downloadCv: "Download CV",
     coinBack: "Show the photo again",
@@ -66,6 +66,15 @@ const specialtyCards = [
     },
   },
   {
+    id: "mobile",
+    icon: FaMobileAlt,
+    title: { es: "Apps Mobile", en: "Mobile Apps" },
+    text: {
+      es: "Aplicaciones para Android e iOS con React Native y Expo, conectadas a APIs propias en FastAPI. Una misma base de código en TypeScript para las dos plataformas.",
+      en: "Android and iOS apps built with React Native and Expo, connected to my own FastAPI backends. One TypeScript codebase for both platforms.",
+    },
+  },
+  {
     id: "data-devops",
     icon: FaDatabase,
     title: { es: "Bases de Datos & DevOps", en: "Databases & DevOps" },
@@ -88,7 +97,7 @@ const specialtyCards = [
 const skillCards = [
   { id: "languages", icon: FaCode, title: { es: "Lenguajes", en: "Languages" }, tags: ["Python", "Java", "TypeScript", "JavaScript"] },
   { id: "backend", icon: FaServer, title: "Backend", tags: ["FastAPI", "Spring Boot", "JPA / Hibernate"] },
-  { id: "frontend", icon: FaCode, title: "Frontend", tags: ["React", "Tailwind CSS", "HTML/CSS"] },
+  { id: "frontend", icon: FaCode, title: "Frontend & Mobile", tags: ["React", "React Native", "Expo", "Tailwind CSS", "HTML/CSS"] },
   { id: "databases", icon: FaDatabase, title: { es: "Bases de Datos", en: "Databases" }, tags: ["MySQL", "PostgreSQL", "Elasticsearch"] },
   { id: "tools", icon: FaRocket, title: { es: "Herramientas & DevOps", en: "Tools & DevOps" }, tags: ["Docker", "Git", "n8n", "Grafana"] },
   { id: "methods", icon: FaBook, title: { es: "Metodologías", en: "Methodologies" }, tags: ["Spec-Driven Development", { es: "Ágil / Scrum", en: "Agile / Scrum" }] },
@@ -376,7 +385,7 @@ export default function Home() {
             <div className="w-20 h-1 bg-gradient-to-r from-stone-500 to-stone-200 mx-auto rounded-full"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {specialtyCards.map(({ id, icon: Icon, title, text }) => (
               <motion.div
                 key={id}
