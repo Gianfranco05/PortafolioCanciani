@@ -9,6 +9,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Loading from "./components/Loading";
 import KonamiEgg from "./components/KonamiEgg";
 import WololoEgg from "./components/WololoEgg";
+import TerminalHost from "./components/TerminalHost";
 import useScrollToTop from "./components/useScrollToTop";
 import { printConsoleEgg } from "./lib/consoleEgg";
 import LanguageProvider from "./i18n/LanguageProvider";
@@ -21,6 +22,7 @@ const Lab = lazy(() => import("./pages/Lab"));
 const FaceTrackDemo = lazy(() => import("./pages/lab/FaceTrackDemo"));
 const SyncTuneDemo = lazy(() => import("./pages/lab/SyncTuneDemo"));
 const SiemDemo = lazy(() => import("./pages/lab/SiemDemo"));
+const AlgoVisualizerDemo = lazy(() => import("./pages/lab/AlgoVisualizerDemo"));
 const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -41,6 +43,7 @@ function AppContent() {
       <ScrollProgress />
       <KonamiEgg />
       <WololoEgg />
+      <TerminalHost />
       <Navbar />
       <ErrorBoundary>
         <AnimatePresence mode="wait">
@@ -54,6 +57,7 @@ function AppContent() {
                 <Route path="/lab/facetrack" element={<FaceTrackDemo />} />
                 <Route path="/lab/synctune" element={<SyncTuneDemo />} />
                 <Route path="/lab/siem" element={<SiemDemo />} />
+                <Route path="/lab/algoritmos" element={<AlgoVisualizerDemo />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

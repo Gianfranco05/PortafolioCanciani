@@ -50,6 +50,7 @@ npm run lint     # ESLint
 | `/lab` | Lab | Índice de demos interactivas |
 | `/lab/facetrack` | FaceTrackDemo | Detección facial, landmarks, parpadeo y liveness con la webcam o una foto |
 | `/lab/synctune` | SyncTuneDemo | Algoritmo de matching YouTube → Spotify de SyncTune, sobre un catálogo de ejemplo |
+| `/lab/algoritmos` | AlgoVisualizerDemo | Burbuja, Selección, Inserción, Quick sort y búsqueda lineal/binaria paso a paso |
 | `/lab/siem` | SiemDemo | Motor de detección de anomalías de la tesis (Isolation Forest + DBSCAN + reglas) sobre logs sintéticos |
 | `/contact` | Contact | Formulario (Formspree) y contacto por WhatsApp |
 | `*` | NotFound | Página 404 |
@@ -90,6 +91,9 @@ Se despliega en Vercel desde la rama `main`. `vercel.json` redirige todas las ru
 - **Bilingüe**: español e inglés con un botón ES/EN. Recuerda la elección y, la primera vez, usa el idioma del navegador.
 - Título y descripción propios en cada página.
 - Filtro de proyectos por tecnología.
+- **Modo papel**: tema claro con renglones y letra manuscrita (botón en el navbar), más la sección "Programo en papel" con la hoja manuscrita junto al código que corre.
+- **Visualizador de algoritmos** en el Lab (`/lab/algoritmos`): ordenamiento y búsqueda paso a paso.
+- **Terminal escondida**: tecla `` ` ``, escribir `help` o el botón `>_` del footer.
 - Respeta `prefers-reduced-motion`.
 - Skip-link y navegación por teclado.
 - Hay algunos easter eggs escondidos. 😉

@@ -5,6 +5,7 @@ import { HiOutlineArrowRight } from 'react-icons/hi';
 import { motion, useReducedMotion } from 'framer-motion';
 import { EASE, fadeUp, handleSpotlightMove } from '../lib/motion';
 import labDemos from '../data/lab';
+import PaperSection from "../components/PaperSection";
 import useLang from '../i18n/useLang';
 import tr from '../i18n/tr';
 import useDocumentMeta from '../i18n/useDocumentMeta';
@@ -23,7 +24,7 @@ const TEXT = {
     photoAlt: "Gianfranco Canciani",
     coinHint: "🪙 tocá la foto",
     labTitle: "Probá mis proyectos en vivo",
-    labText: "No solo capturas: tres de mis proyectos tienen una demo que corre directo en tu navegador.",
+    labText: "No solo capturas: tres de mis proyectos tienen una demo que corre directo en tu navegador, y hay un visualizador de algoritmos.",
     tryDemo: "Probar demo",
     labHow: "Ver cómo funciona cada demo",
     specialties: "Especialidades Técnicas",
@@ -44,7 +45,7 @@ const TEXT = {
     photoAlt: "Gianfranco Canciani",
     coinHint: "🪙 tap the photo",
     labTitle: "Try my projects live",
-    labText: "Not just screenshots: three of my projects have a demo that runs right in your browser.",
+    labText: "Not just screenshots: three of my projects have a demo that runs right in your browser, plus an algorithm visualizer.",
     tryDemo: "Try demo",
     labHow: "See how each demo works",
     specialties: "Technical Expertise",
@@ -334,7 +335,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {labDemos
               .filter((d) => d.status === "available")
               .map((demo) => (
@@ -360,6 +361,8 @@ export default function Home() {
             </Link>
           </div>
         </motion.div>
+
+        <PaperSection />
 
         {/* Sección Especialidades Técnicas */}
         <motion.div

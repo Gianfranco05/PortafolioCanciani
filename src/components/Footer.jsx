@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MEDITATIONS_AUTHOR, randomQuote } from '../lib/quotes';
+import { OPEN_TERMINAL_EVENT } from "./TerminalHost";
 import useLang from '../i18n/useLang';
 import tr from '../i18n/tr';
 
@@ -19,8 +20,9 @@ const TEXT = {
     tagline: "Desarrollador de software y docente IT.",
     nav: "Navegación",
     social: "Redes",
-    rights: "{t.rights}",
+    rights: "Todos los derechos reservados.",
     coffeeLabel: "Invitame un café",
+    terminalLabel: "Abrir la terminal",
     coffee: (n, line) => `☕ café #${n} — ${line}`,
   },
   en: {
@@ -29,6 +31,7 @@ const TEXT = {
     social: "Social",
     rights: "All rights reserved.",
     coffeeLabel: "Buy me a coffee",
+    terminalLabel: "Open the terminal",
     coffee: (n, line) => `☕ coffee #${n} — ${line}`,
   },
 };
@@ -181,7 +184,16 @@ export default function Footer() {
 
         <div className="border-t border-stone-800/50 pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3">
           <p className="text-stone-500 text-xs order-2 sm:order-1">
-            &copy; {year} Gianfranco Canciani. {t.rights}
+            &copy; {year} Gianfranco Canciani. {t.rights}{" "}
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event(OPEN_TERMINAL_EVENT))}
+              className="font-mono text-stone-600 hover:text-stone-300 transition-colors"
+              aria-label={t.terminalLabel}
+              title={t.terminalLabel}
+            >
+              &gt;_
+            </button>
           </p>
 
           {/* Easter egg: taza de café — clic para sumar una */}

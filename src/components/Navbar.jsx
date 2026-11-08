@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu, HiX, HiOutlineMoon, HiOutlineDocumentText } from "react-icons/hi";
+import useTheme from "../lib/useTheme";
+import { toggleTheme } from "../lib/theme";
 import useLang from "../i18n/useLang";
 import tr from "../i18n/tr";
 
@@ -34,6 +36,28 @@ function LanguageToggle() {
           {code.toUpperCase()}
         </span>
       ))}
+    </button>
+  );
+}
+
+// Cambia entre el tema oscuro y el modo papel (hoja clara con letra manuscrita).
+function ThemeToggle() {
+  const { lang } = useLang();
+  const theme = useTheme();
+  const paper = theme === "paper";
+  const label = paper
+    ? lang === "es" ? "Volver al modo oscuro" : "Back to dark mode"
+    : lang === "es" ? "Activar modo papel" : "Switch to paper mode";
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-pressed={paper}
+      aria-label={label}
+      title={label}
+      className="p-2 rounded-full border border-stone-700 bg-stone-900/60 text-stone-300 hover:text-white transition-colors"
+    >
+      {paper ? <HiOutlineMoon size={16} /> : <HiOutlineDocumentText size={16} />}
     </button>
   );
 }
@@ -150,11 +174,13 @@ export default function Navbar() {
             </motion.div>
           ))}
           <LanguageToggle />
+          <ThemeToggle />
         </div>
 
         {/* Mobile: idioma siempre visible + botón hamburguesa */}
         <div className="md:hidden flex items-center gap-3">
           <LanguageToggle />
+          <ThemeToggle />
           <motion.button
             onClick={() => setIsOpen(!isOpen)}
             whileHover={{ scale: 1.1 }}

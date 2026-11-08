@@ -752,6 +752,26 @@ Cambios que hacen que el sitio sea publicable.
 
 ---
 
+## ✅ Fase 13: Modo papel, visualizador de algoritmos y terminal escondida
+
+### 13.1 feat/modo-papel ✅
+
+- [x] Tema "papel" (hoja de cuaderno con renglones y letra manuscrita Caveat) con botón en el navbar. Se logra invirtiendo la escala `stone` y `white` con variables CSS de Tailwind v4 bajo `html[data-theme="paper"]`, sin tocar los componentes. Se guarda en `localStorage` (`theme`) y `index.html` lo aplica antes del primer render. La fuente Caveat se baja solo al usar el modo papel o la sección
+- [x] Sección **Programo en papel** en Inicio (`PaperSection`, datos en `src/data/papel.js`): hoja manuscrita a la izquierda y el mismo algoritmo en código a la derecha, con botón Ejecutar que corre el algoritmo real. Para usar fotos reales del cuaderno: guardarlas en `public/images/papel/` y poner la ruta en `image`
+
+### 13.2 feat/visualizador-algoritmos ✅
+
+- [x] Demo `/lab/algoritmos`: Burbuja, Selección, Inserción, Quick sort, búsqueda lineal y binaria. Play/pausa, paso atrás/adelante, velocidad, cantidad, valor a buscar, comparaciones/intercambios y complejidad. `src/lib/algorithms.js` devuelve la lista de pasos (verificado con 1000 casos aleatorios)
+
+### 13.3 feat/terminal-escondida ✅
+
+- [x] Terminal: tecla ` o escribir `help` fuera de un campo, o el botón `>_` del footer (celular). Comandos: help, whoami, ls, projects, experience, stack, lab, contact, goto, theme, lang, quote, coffee, date, echo, sudo, clear, exit. Historial con ↑/↓, Tab completa. Se descarga recién al abrirla (chunk aparte, ~3.8 kB gzip)
+- [x] Fix: el footer en español mostraba el texto literal `{t.rights}`
+
+**Archivos**: nuevos `src/lib/{theme,useTheme,algorithms}.js`, `src/pages/lab/AlgoVisualizerDemo.jsx`, `src/components/{PaperSection,TerminalHost,HiddenTerminal}.jsx`, `src/data/papel.js`; modificados `index.css`, `index.html`, `App.jsx`, `Navbar`, `Footer`, `Home`, `lab.js`, `sitemap.xml`. Bundle principal: 133.4 → 134.6 kB gzip.
+
+---
+
 ## ✅ Fase 12: Idiomas, SEO por página y filtro
 
 ### 12.1 feat/i18n-es-en ✅

@@ -133,3 +133,69 @@ body.wololo-active * {
     15 15,
     auto !important;
 }
+
+/* ───────── Modo papel ─────────
+   Tailwind v4 expone la paleta como variables CSS; en modo papel se invierte la escala
+   stone (oscuro → hoja de cuaderno) y "white" pasa a ser tinta. Así todo el sitio cambia
+   sin tocar cada componente. */
+html[data-theme="paper"] {
+  color-scheme: light;
+  --color-white: #1c160c;
+  --color-stone-50: #17120a;
+  --color-stone-100: #241d12;
+  --color-stone-200: #342b1d;
+  --color-stone-300: #4b402d;
+  --color-stone-400: #6a5c43;
+  --color-stone-500: #75654a;
+  --color-stone-600: #b3a27d;
+  --color-stone-700: #d8c9a3;
+  --color-stone-800: #eadfc0;
+  --color-stone-900: #f3ead2;
+  --color-stone-950: #fbf6e9;
+  /* colores de estado: más oscuros para que se lean sobre fondo claro */
+  --color-green-300: #166534;
+  --color-green-400: #15803d;
+  --color-red-300: #991b1b;
+  --color-red-400: #b91c1c;
+  --color-amber-300: #92400e;
+  --color-amber-400: #b45309;
+  --color-pink-400: #be185d;
+}
+html[data-theme="paper"] body {
+  background-color: #f3ead2;
+  color: #1c160c;
+  /* renglones de cuaderno */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    rgba(70, 110, 170, 0.14) 31px,
+    rgba(70, 110, 170, 0.14) 32px
+  );
+}
+html[data-theme="paper"] #main-content {
+  background-color: transparent;
+}
+html[data-theme="paper"] ::-webkit-scrollbar-track {
+  background: #f3ead2;
+}
+html[data-theme="paper"] ::-webkit-scrollbar-thumb {
+  background-color: #b3a27d;
+  border-color: #f3ead2;
+}
+html[data-theme="paper"] * {
+  scrollbar-color: #b3a27d #f3ead2;
+}
+html[data-theme="paper"] :is(h1, h2, h3) {
+  font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+html[data-theme="paper"] .spotlight::before {
+  background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), rgba(120, 90, 30, 0.10), transparent 70%);
+}
+
+/* Letra manuscrita (hoja de "Programo en papel", terminal no) */
+.font-hand {
+  font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+}

@@ -62,6 +62,8 @@ mi-portafolio/
     │   ├── blink.js              # Detección de parpadeo con histéresis
     │   ├── synctuneMatcher.js    # Port del matching de SyncTune
     │   ├── siemEngine.js         # Port del motor de la tesis (IF + DBSCAN + reglas)
+    │   ├── algorithms.js         # Ordenamiento/búsqueda que devuelven la lista de pasos (visualizador y PaperSection)
+    │   ├── theme.js / useTheme.js # Tema oscuro/papel (data-theme en <html>, localStorage `theme`)
     │   ├── quotes.js / consoleEgg.js  # Easter eggs
     ├── components/
     │   ├── Navbar.jsx            # Navbar fijo con scroll detection + hamburger mobile
@@ -71,6 +73,8 @@ mi-portafolio/
     │   ├── Loading.jsx           # Spinner para Suspense fallback
     │   ├── ScrollProgress.jsx    # Barra de progreso de scroll
     │   ├── KonamiEgg.jsx / WololoEgg.jsx  # Easter eggs
+    │   ├── TerminalHost.jsx / HiddenTerminal.jsx  # Terminal escondida (tecla `, "help" o botón >_ del footer); la terminal es lazy
+    │   ├── PaperSection.jsx      # "Programo en papel": hoja manuscrita + código que corre (datos en src/data/papel.js)
     │   └── useScrollToTop.js     # Custom hook: scroll to top al cambiar de ruta
     └── pages/
         ├── Home.jsx              # Hero + Skills Técnicas + Soft Skills + CV download
@@ -80,6 +84,7 @@ mi-portafolio/
         ├── lab/FaceTrackDemo.jsx # Demo MediaPipe: landmarks, parpadeo, liveness (webcam o foto)
         ├── lab/SyncTuneDemo.jsx  # Port del matching de SyncTune (src/lib/synctuneMatcher.js)
         ├── lab/SiemDemo.jsx      # Port del motor de la tesis (src/lib/siemEngine.js)
+        ├── lab/AlgoVisualizerDemo.jsx # Visualizador de algoritmos (src/lib/algorithms.js)
         ├── Contact.jsx           # Formulario con validación React + Formspree + WhatsApp
         └── NotFound.jsx          # Página 404 con diseño consistente
 ```
@@ -105,6 +110,7 @@ src/main.jsx
                       │                   ├── "/lab/facetrack" → lazy(FaceTrackDemo)
                       │                   ├── "/lab/synctune"  → lazy(SyncTuneDemo)
                       │                   ├── "/lab/siem"      → lazy(SiemDemo)
+                      │                   ├── "/lab/algoritmos" → lazy(AlgoVisualizerDemo)
                       │                   ├── "/contact"     → lazy(Contact)
                       │                   └── "*"            → lazy(NotFound)  (404)
                       └── <Footer />               (año dinámico, navegación, redes sociales)
@@ -151,6 +157,8 @@ src/main.jsx
 12. **Imports**: Limpiar imports no utilizados antes de commitear.
 
 - **Idioma**: `src/i18n/LanguageProvider.jsx` guarda la elección en `localStorage` (`lang`); sin elección usa el idioma del navegador (`es*` → español, otro → inglés). Los class components (ErrorBoundary) leen `document.documentElement.lang`.
+- **Modo papel**: `html[data-theme="paper"]` en `index.css` redefine las variables de Tailwind (`--color-stone-*`, `--color-white`); por eso los componentes usan siempre las clases `stone-*`/`white` y NO colores hex sueltos (salvo la hoja de PaperSection y la terminal, que son fijas a propósito). Los colores de estado (green/red/amber 300-400) se oscurecen en ese bloque; si se usa otro color de acento sobre fondo claro, agregarlo ahí. La fuente Caveat se carga bajo demanda (`loadHandFont`).
+- **Terminal**: nuevos comandos van en el `switch` de `HiddenTerminal.jsx` y en `COMMANDS` (autocompletar); todo texto en el diccionario `TEXT` ES/EN.
 - **Filtro de proyectos**: chips por tecnología en `Projects.jsx` (lista `FILTERS`); el estado vive en la página, no en la URL.
 
 ### Próximos Pasos Conocidos (Backlog)

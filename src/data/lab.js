@@ -36,6 +36,18 @@ const labDemos = [
     path: "/lab/siem",
     tech: ["Isolation Forest", "DBSCAN", { es: "Logs sintéticos", en: "Synthetic logs" }],
   },
+  {
+    id: "algoritmos",
+    name: { es: "Visualizador de algoritmos", en: "Algorithm visualizer" },
+    tagline: { es: "Ordenar y buscar, paso a paso", en: "Sorting and searching, step by step" },
+    description: {
+      es: "Mirá cómo ordenan Burbuja, Selección, Inserción y Quick sort, y cómo buscan la lineal y la binaria. Controlás la velocidad, avanzás y retrocedés paso a paso y ves cuántas comparaciones hace cada uno.",
+      en: "Watch how Bubble, Selection, Insertion and Quick sort order data, and how linear and binary search find it. Control the speed, step forward and back, and see how many comparisons each one makes.",
+    },
+    status: "available",
+    path: "/lab/algoritmos",
+    tech: [{ es: "Algoritmos", en: "Algorithms" }, "Big-O", { es: "Paso a paso", en: "Step by step" }],
+  },
 ];
 
 export default labDemos;
