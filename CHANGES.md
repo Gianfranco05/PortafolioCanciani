@@ -757,7 +757,7 @@ Cambios que hacen que el sitio sea publicable.
 ### 13.1 feat/modo-papel ✅
 
 - [x] Tema "papel" (hoja de cuaderno con renglones y letra manuscrita Caveat) con botón en el navbar. Se logra invirtiendo la escala `stone` y `white` con variables CSS de Tailwind v4 bajo `html[data-theme="paper"]`, sin tocar los componentes. Se guarda en `localStorage` (`theme`) y `index.html` lo aplica antes del primer render. La fuente Caveat se baja solo al usar el modo papel o la sección
-- [x] Sección **Programo en papel** en Inicio (`PaperSection`, datos en `src/data/papel.js`): hoja manuscrita a la izquierda y el mismo algoritmo en código a la derecha, con botón Ejecutar que corre el algoritmo real. Para usar fotos reales del cuaderno: guardarlas en `public/images/papel/` y poner la ruta en `image`
+- [x] Dato curioso **Programo en papel** en Inicio (`PaperSection`): una línea y un botón que alterna el modo papel, igual que el del navbar
 
 ### 13.2 feat/visualizador-algoritmos ✅
 
@@ -768,7 +768,7 @@ Cambios que hacen que el sitio sea publicable.
 - [x] Terminal: tecla ` o escribir `help` fuera de un campo, o el botón `>_` del footer (celular). Comandos: help, whoami, ls, projects, experience, stack, lab, contact, goto, theme, lang, quote, coffee, date, echo, sudo, clear, exit. Historial con ↑/↓, Tab completa. Se descarga recién al abrirla (chunk aparte, ~3.8 kB gzip)
 - [x] Fix: el footer en español mostraba el texto literal `{t.rights}`
 
-**Archivos**: nuevos `src/lib/{theme,useTheme,algorithms}.js`, `src/pages/lab/AlgoVisualizerDemo.jsx`, `src/components/{PaperSection,TerminalHost,HiddenTerminal}.jsx`, `src/data/papel.js`; modificados `index.css`, `index.html`, `App.jsx`, `Navbar`, `Footer`, `Home`, `lab.js`, `sitemap.xml`. Bundle principal: 133.4 → 134.6 kB gzip.
+**Archivos**: nuevos `src/lib/{theme,useTheme,algorithms}.js`, `src/pages/lab/AlgoVisualizerDemo.jsx`, `src/components/{PaperSection,TerminalHost,HiddenTerminal}.jsx`; modificados `index.css`, `index.html`, `App.jsx`, `Navbar`, `Footer`, `Home`, `lab.js`, `sitemap.xml`. Bundle principal: 133.4 → 134.6 kB gzip.
 
 ---
 

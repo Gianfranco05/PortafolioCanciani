@@ -91,7 +91,7 @@ Se despliega en Vercel desde la rama `main`. `vercel.json` redirige todas las ru
 - **Bilingüe**: español e inglés con un botón ES/EN. Recuerda la elección y, la primera vez, usa el idioma del navegador.
 - Título y descripción propios en cada página.
 - Filtro de proyectos por tecnología.
-- **Modo papel**: tema claro con renglones y letra manuscrita (botón en el navbar), más la sección "Programo en papel" con la hoja manuscrita junto al código que corre.
+- **Modo papel**: tema claro con renglones y letra manuscrita (botón en el navbar y en el dato curioso "Programo en papel" del inicio).
 - **Visualizador de algoritmos** en el Lab (`/lab/algoritmos`): ordenamiento y búsqueda paso a paso.
 - **Terminal escondida**: tecla `` ` ``, escribir `help` o el botón `>_` del footer.
 - Respeta `prefers-reduced-motion`.

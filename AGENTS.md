@@ -62,7 +62,7 @@ mi-portafolio/
     │   ├── blink.js              # Detección de parpadeo con histéresis
     │   ├── synctuneMatcher.js    # Port del matching de SyncTune
     │   ├── siemEngine.js         # Port del motor de la tesis (IF + DBSCAN + reglas)
-    │   ├── algorithms.js         # Ordenamiento/búsqueda que devuelven la lista de pasos (visualizador y PaperSection)
+    │   ├── algorithms.js         # Ordenamiento/búsqueda que devuelven la lista de pasos (visualizador)
     │   ├── theme.js / useTheme.js # Tema oscuro/papel (data-theme en <html>, localStorage `theme`)
     │   ├── quotes.js / consoleEgg.js  # Easter eggs
     ├── components/
@@ -74,7 +74,7 @@ mi-portafolio/
     │   ├── ScrollProgress.jsx    # Barra de progreso de scroll
     │   ├── KonamiEgg.jsx / WololoEgg.jsx  # Easter eggs
     │   ├── TerminalHost.jsx / HiddenTerminal.jsx  # Terminal escondida (tecla `, "help" o botón >_ del footer); la terminal es lazy
-    │   ├── PaperSection.jsx      # "Programo en papel": hoja manuscrita + código que corre (datos en src/data/papel.js)
+    │   ├── PaperSection.jsx      # Dato curioso "Programo en papel" con botón que alterna el modo papel
     │   └── useScrollToTop.js     # Custom hook: scroll to top al cambiar de ruta
     └── pages/
         ├── Home.jsx              # Hero + Skills Técnicas + Soft Skills + CV download
